@@ -15,14 +15,15 @@ export default function SearchBar({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="searchBar">
       <input
         type="text"
         value={query}
         onChange={e => handleChange(e)}
         placeholder="Departamento en Xalapa, Casa en la playa..."
+        id="searchBar"
       />
-      <button type="submit" className="primary">Buscar</button>
+      <button type="submit" className="primary-button">Buscar</button>
     </form>
   );
 }

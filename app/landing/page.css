@@ -16,3 +16,13 @@
 .searchControls {
     margin: 0 0 4vh 0;
 }
+
+.propertiesGrid {
+    display: grid;
+    gap: 2vw;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+body {
+    padding-top: 8.5vh;
+}

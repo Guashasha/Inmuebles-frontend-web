@@ -5,6 +5,8 @@
   justify-content: space-between;
   align-items: center;
   background: linear-gradient(to bottom, #dfdfdf, #ffffff);
+  position: fixed;
+  top: 0;
 }
 
 .accountButton {
@@ -35,7 +37,7 @@
   left: 0;
   right: 0;
   margin: 0 auto;
-  height: 15vh;
+  height: 130px;
   width: auto;
 }
 

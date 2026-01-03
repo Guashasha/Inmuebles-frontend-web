@@ -1,0 +1,30 @@
+.card {
+    cursor: pointer;
+    background: linear-gradient(to bottom, white, aliceblue);
+    border-radius: 8;
+    border: 1px solid rgb(218, 238, 255);
+    padding: 0;
+}
+
+.card p {
+    padding: 0 2vw 0 2vw;
+}
+
+.card img {
+    width: 100%;
+    margin-bottom: 0.5vh;
+}
+
+.tag {
+    margin: 0.8vh 0;
+}
+
+.cityTag {
+    font-size: 85%;
+    margin: 0.8vh 0 2vh 0;
+}
+
+.actionTag {
+    font-size: 85%;
+    margin: 0.8vh 0 1.5vh 0;
+}

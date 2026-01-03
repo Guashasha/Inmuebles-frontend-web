@@ -1,0 +1,47 @@
+.topBar {
+  padding: 1.5vh 0 1vh 0;
+  display: flex;
+  width: 100vw;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, #dfdfdf, #ffffff);
+  position: fixed;
+  top: 0;
+}
+
+.accountButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  justify-content: flex-end;
+  border: none;
+  border-radius: 0.5rem;
+  margin-left: auto;
+}
+
+.accountButton:hover {
+  background-color: #e5e7eb;
+}
+
+.topBar > .logo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  height: 130px;
+  width: auto;
+}
+
+.userIcon {
+  height: 4.5vh;
+  width: auto;
+}

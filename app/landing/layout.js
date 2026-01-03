@@ -1,5 +1,4 @@
 import TopBar from "@components/topBar/TopBar.js";
-import { UserProvider } from "../../context/UserContext";
 
 export const metadata = {
   title: "Inmuebles a tu alcance",
@@ -8,12 +7,9 @@ export const metadata = {
 
 export default function MainMenuLayout({ children }) {
   return (
-      <div>
-        <UserProvider>
-          <TopBar />
-
-          <main>{children}</main>
-        </UserProvider>
-      </div>
+    <div>
+      <TopBar />
+      <main>{children}</main>
+    </div>
   );
 }

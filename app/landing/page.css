@@ -1,28 +1,25 @@
 .mainContainer {
-    margin: auto;
-    justify-content: center;
-    align-items: center;
-    width: 80vw;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  width: 80vw;
+  padding-top: 10vh;
 }
 
 .categoriesContainer {
-    display: flex;
-    vertical-align: center;
-    align-items: center;
-    gap: 1.5vw;
-    margin: 1vh 0;
+  display: flex;
+  vertical-align: center;
+  align-items: center;
+  gap: 1.5vw;
+  margin: 1vh 0;
 }
 
 .searchControls {
-    margin: 0 0 4vh 0;
+  margin: 0 0 4vh 0;
 }
 
 .propertiesGrid {
-    display: grid;
-    gap: 2vw;
-    grid-template-columns: repeat(3, 1fr);
-}
-
-body {
-    padding-top: 8.5vh;
+  display: grid;
+  gap: 2vw;
+  grid-template-columns: repeat(3, 1fr);
 }

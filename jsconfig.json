@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@components/*": ["./components/ui/*"],
+            "@layouts/*": ["./components/layout/*"],
+            "@styles/*": ["./styles/*"],
+            "@context/*": ["./context/*"],
+            "@constants": ["./lib/constants.js"]
+        }
+    }
+}

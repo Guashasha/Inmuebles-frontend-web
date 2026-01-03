@@ -7,7 +7,7 @@
 }
 
 .categoriesContainer {
-    display: inline;
+    display: flex;
     vertical-align: bottom;
 }
 

@@ -1,14 +1,16 @@
-import './assets/css/styles.css'
+import '@styles/global.css';
 
 export const metadata = {
   title: 'Inmuebles a tu alcance',
-  description: 'Sistema para la materia desarrollo de sistemas web',
+  description: 'Encuentra las mejores propiedades en Veracruz',
 };
- 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        {children}
+      </body>
     </html>
   );
 }

@@ -53,3 +53,12 @@ button {
     border-radius: 999;
     border: 1px solid gray;
 }
+
+.topBar {
+    display: flex;
+    width: 100vw;
+}
+
+.accountButton {
+    display: flex;
+}

@@ -1,5 +1,3 @@
-import "@styles/global.css";
-
 import TopBar from "@components/topBar/TopBar.js";
 import { UserProvider } from "../../context/UserContext";
 
@@ -8,17 +6,14 @@ export const metadata = {
   description: "Sistema para la materia desarrollo de sistemas web",
 };
 
-export default function RootLayout({ children }) {
+export default function MainMenuLayout({ children }) {
   return (
-    <html lang="es">
-      <body>
+      <div>
         <UserProvider>
-          <TopBar
-          />
+          <TopBar />
 
           <main>{children}</main>
         </UserProvider>
-      </body>
-    </html>
+      </div>
   );
 }

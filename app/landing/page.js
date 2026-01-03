@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ToggleButton from "@components/toggleButton/ToggleButton.js";
 import SearchBar from "@components/searchBar/SearchBar.js";
 import { PROPERTY_CATEGORIES } from "@constants";
-import "./page.module.css";
+import "./page.css";
 
 export default function HomePage() {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -34,7 +34,7 @@ export default function HomePage() {
           <div className="categoriesContainer">
             <p>Categoría:</p>
             {PROPERTY_CATEGORIES.map((category) => (
-              <ToggleButton label={category.label} value={category.id} onToggle={handleCategoryToggle} />
+              <ToggleButton key={category.id} label={category.label} value={category.id} onToggle={handleCategoryToggle} />
             ))}
           </div>
         </div>

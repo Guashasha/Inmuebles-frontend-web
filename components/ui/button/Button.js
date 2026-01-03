@@ -1,3 +1,5 @@
+import './Button.css';
+
 export default function Button({onClick, text, type = "primary"}) {
   let cssClass;
 

@@ -3,18 +3,16 @@
     justify-content: center;
     align-items: center;
     width: 80vw;
-    background-color: aliceblue;
 }
 
 .categoriesContainer {
     display: flex;
-    vertical-align: bottom;
+    vertical-align: center;
+    align-items: center;
+    gap: 1.5vw;
+    margin: 1vh 0;
 }
 
 .searchControls {
-
-}
-
-.contentGrid {
-
+    margin: 0 0 4vh 0;
 }

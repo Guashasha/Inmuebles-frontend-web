@@ -1,7 +1,11 @@
 'use client';
 
-import { useUser } from "@context/UserContext";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { useUser } from "@context/UserContext";
+import logoImage from '@images/logo.png';
+import userIcon from '@icons/user.svg';
+import "./TopBar.css";
 
 export default function TopBar() {
   const { user, isAuthenticated } = useUser();
@@ -22,11 +26,11 @@ export default function TopBar() {
 
   return (
     <div className="topBar">
-      <img src="/public/images/logo.png" />
+      <Image alt="Logo de empresa" className="logo" src={logoImage} />
 
       <div className="accountButton" onClick={onClickFunction}>
         <p>{displayName}</p>
-        <img src="./assets/icons/user.svg" />
+        <Image alt="Icono de usuario" className="userIcon" src={userIcon} />
       </div>
     </div>
   );

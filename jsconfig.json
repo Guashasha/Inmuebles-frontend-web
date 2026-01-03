@@ -5,7 +5,9 @@
             "@layouts/*": ["./components/layout/*"],
             "@styles/*": ["./styles/*"],
             "@context/*": ["./context/*"],
-            "@constants": ["./lib/constants.js"]
+            "@constants": ["./lib/constants.js"],
+            "@images/*": ["./public/images/*"],
+            "@icons/*": ["./public/icons/*"]
         }
     }
 }

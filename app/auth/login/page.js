@@ -1,44 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@context/UserContext";
 import Link from "next/link";
-import "./login.css";
+import AuthService from "@/services/AuthService";
+import Alert from "@components/alert/Alert";
+import styles from "./login.module.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useUser();
+  const [alert, setAlert] = useState({ type: "", message: "" });
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  useEffect(() => {
+    AuthService.logout();
+  }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setAlert({ type: "", message: "" });
+    setLoading(true);
 
-    const result = login({ email, password });
+    try {
+      const result = await AuthService.login(email, password);
 
-    if (result.success) {
-      router.push("/landing");
-    } else {
-      alert("Error al iniciar sesión");
+      if (result.success) {
+        setAlert({ type: "success", message: "Inicio de sesión exitoso" });
+        setTimeout(() => router.push("/landing"), 1000);
+      } else {
+        setAlert({ type: "error", message: result.error });
+      }
+    } catch (err) {
+      setAlert({ type: "error", message: "Error al conectar con el servidor" });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="loginContainer">
-      <h1 className="title">
+    <div className={styles.container}>
+      <h1 className={styles.title}>
         Inmuebles
         <br />a tu alcance
       </h1>
-
-      <p className="subtitle">
+      <p className={styles.subtitle}>
         Ingresa tu correo y contraseña
         <br />
         para iniciar sesión
       </p>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div style={{ marginBottom: "20px", minHeight: "20px" }}>
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert({ type: "", message: "" })}
+          />
+        </div>
 
-      <form onSubmit={handleSubmit} className="form">
-        <div className="inputGroup">
+        <div className={styles.inputGroup}>
           <label htmlFor="email">Correo electrónico</label>
           <input
             id="email"
@@ -47,10 +67,11 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
-        <div className="inputGroup">
+        <div className={styles.inputGroup}>
           <label htmlFor="password">Contraseña</label>
           <input
             id="password"
@@ -59,20 +80,21 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
-        <button type="submit" className="loginButton">
-          Iniciar sesión
+        <button type="submit" className={styles.loginButton} disabled={loading}>
+          {loading ? "Iniciando sesión..." : "Iniciar sesión"}
         </button>
 
-        <div className="links">
-          <Link href="/auth/register" className="link">
+        <div className={styles.links}>
+          <Link href="/auth/register" className={styles.link}>
             ¿No tienes una cuenta?
             <br />
             Crear cuenta nueva
           </Link>
-          <Link href="/auth/recovery" className="link">
+          <Link href="/auth/recovery" className={styles.link}>
             ¿No recuerdas tu contraseña?
             <br />
             Recuperar contraseña

@@ -1,53 +1,65 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import AuthService from "@/services/AuthService";
 
 const UserContext = createContext(undefined);
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user_data");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (error) {
-      // TODO mostrar menos errores producción
-      console.error("Error cargando los datos del usuario: ", error);
-      localStorage.removeItem("user_data");
-    }
-  }, []);
+    const initAuth = () => {
+      const isAuthPage = pathname.startsWith("/auth/");
 
-  function login(userCredentials) {
-    // TODO obtener datos desde el API
-    const userData = {
-      id: 1,
-      name: "John Doe",
+      if (isAuthPage) {
+        AuthService.logout();
+        setUser(null);
+        setLoadingUser(false);
+        return;
+      }
+
+      const storedUser = AuthService.getUser();
+      if (storedUser) {
+        setUser(storedUser);
+      }
+      setLoadingUser(false);
     };
 
-    localStorage.setItem("user_data", JSON.stringify(userData));
-    setUser(userData);
+    initAuth();
+  }, [pathname]);
 
-    return { success: true };
+  async function login(email, password) {
+    AuthService.logout();
+
+    const result = await AuthService.login(email, password);
+
+    if (result.success) {
+      setUser(result.data.user);
+    }
+
+    return result;
   }
 
   function logout() {
-    localStorage.removeItem("user_data");
+    AuthService.logout();
     setUser(null);
   }
 
   function updateUser(updates) {
     setUser((prev) => {
       const updatedUser = { ...prev, ...updates };
-      localStorage.setItem("user_data", JSON.stringify(updatedUser));
+      localStorage.setItem("user", JSON.stringify(updatedUser));
       return updatedUser;
     });
   }
 
   const contextValue = {
     user,
+    loadingUser,
     login,
     logout,
     updateUser,
@@ -55,18 +67,16 @@ export function UserProvider({ children }) {
   };
 
   return (
-    <UserContext.Provider value={contextValue}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 }
 
 export function useUser() {
   const context = useContext(UserContext);
-  
+
   if (context === undefined) {
-    throw new Error('useUser debe usarse dentro de UserProvider');
+    throw new Error("useUser debe usarse dentro de UserProvider");
   }
-  
+
   return context;
 }

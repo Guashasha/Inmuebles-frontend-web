@@ -1,13 +1,14 @@
 {
-    "compilerOptions": {
-        "paths": {
-            "@components/*": ["./components/ui/*"],
-            "@layouts/*": ["./components/layout/*"],
-            "@styles/*": ["./styles/*"],
-            "@context/*": ["./context/*"],
-            "@constants": ["./lib/constants.js"],
-            "@images/*": ["./public/images/*"],
-            "@icons/*": ["./public/icons/*"]
-        }
+  "compilerOptions": {
+    "paths": {
+      "@components/*": ["./components/ui/*"],
+      "@layouts/*": ["./components/layout/*"],
+      "@styles/*": ["./styles/*"],
+      "@context/*": ["./context/*"],
+      "@constants": ["./lib/constants.js"],
+      "@images/*": ["./public/images/*"],
+      "@icons/*": ["./public/icons/*"],
+      "@/services/*": ["./services/*"]
     }
+  }
 }

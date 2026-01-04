@@ -1,4 +1,4 @@
-.loginContainer {
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,6 +6,8 @@
   min-height: 100vh;
   padding-top: 10vh;
   background-color: white;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .title {
@@ -13,15 +15,23 @@
   font-weight: 500;
   text-align: center;
   margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
   line-height: 1.2;
   color: #000;
 }
 
 .subtitle {
   color: #666;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   text-align: center;
   font-size: 0.9rem;
+}
+
+.alertContainer {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 1rem;
+  min-height: 20px;
 }
 
 .form {

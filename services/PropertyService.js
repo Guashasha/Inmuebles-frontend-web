@@ -72,3 +72,8 @@ export async function createProperty(property) {
 
   return await response.json();
 }
+
+export async function getPropertyData() {
+  //TODO
+  return null;
+}

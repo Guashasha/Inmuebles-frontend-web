@@ -72,3 +72,17 @@ export async function createProperty(property) {
 
   return await response.json();
 }
+
+export async function getPropertyData(propertyId) {
+  const url = `${apiUrl}${propertiesUrl}/${propertyId}`;
+  const response = await fetch(url);
+
+  return await response.json();
+}
+
+export async function getPropertyImages(propertyId) {
+  const url = `${apiUrl}${propertiesUrl}/${propertyId}/images`;
+  const response = await fetch(url);
+
+  return await response.json();
+}

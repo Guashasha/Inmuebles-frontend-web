@@ -13,7 +13,7 @@ export default function TopBar() {
 
   const handleAccountClick = () => {
     if (isAuthenticated) {
-      router.push("/app/profile");
+      router.push("/account/accountDetails");
     } else {
       router.push("/auth/login");
     }

@@ -3,9 +3,11 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import AuthService from "@/services/AuthService";
 import { LOCATIONS, PROPERTY_CATEGORIES } from "@constants";
 import Alert from "@components/alert/Alert";
+import { validateRegisterData } from "@validators";
 import styles from "./register.module.css";
 
 export default function Register() {
@@ -13,6 +15,9 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [alert, setAlert] = useState({ type: "", message: "" });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -61,12 +66,13 @@ export default function Register() {
   const handleNextStep = (e) => {
     e.preventDefault();
     setAlert({ type: "", message: "" });
+    const { isValid, errors } = validateRegisterData(formData);
 
-    if (formData.password !== formData.confirmPassword) {
-      setAlert({ type: "error", message: "Las contraseñas no coinciden." });
+    if (!isValid) {
+      const firstErrorMessage = Object.values(errors)[0];
+      setAlert({ type: "error", message: firstErrorMessage });
       return;
     }
-
     setStep(2);
   };
 
@@ -92,9 +98,12 @@ export default function Register() {
           codigoPostal: formData.codigoPostal,
         },
         rfc: formData.rfc,
-        presupuestoMin: formData.presupuestoMin,
-        presupuestoMax: formData.presupuestoMax,
-        idCategoria: formData.idCategoria,
+        presupuestoMin:
+          formData.presupuestoMin !== "" ? Number(formData.presupuestoMin) : 0,
+        presupuestoMax: formData.presupuestoMax
+          ? parseFloat(formData.presupuestoMax)
+          : 100000000,
+        idCategoria: parseInt(formData.idCategoria),
       };
 
       const result = await AuthService.register(payload);
@@ -144,7 +153,6 @@ export default function Register() {
                 placeholder="Ej. Juan"
                 value={formData.nombre}
                 onChange={handleChange}
-                required
               />
             </div>
             <div className={styles.inputGroup}>
@@ -155,7 +163,6 @@ export default function Register() {
                 placeholder="Ej. Pérez"
                 value={formData.apellidos}
                 onChange={handleChange}
-                required
               />
             </div>
             <div className={styles.inputGroup}>
@@ -166,7 +173,6 @@ export default function Register() {
                 placeholder="correo@ejemplo.com"
                 value={formData.email}
                 onChange={handleChange}
-                required
               />
             </div>
             <div className={styles.inputGroup}>
@@ -177,7 +183,15 @@ export default function Register() {
                 placeholder="10 dígitos"
                 value={formData.telefono}
                 onChange={handleChange}
-                required
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label>Fecha de nacimiento</label>
+              <input
+                type="date"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
+                onChange={handleChange}
               />
             </div>
             <div className={styles.inputGroup}>
@@ -187,8 +201,7 @@ export default function Register() {
                 name="rfc"
                 value={formData.rfc}
                 onChange={handleChange}
-                required
-                placeholder="Obligatorio"
+                placeholder="Ej. PEJJ800101XXX"
               />
             </div>
 
@@ -227,25 +240,58 @@ export default function Register() {
           <div className={styles.column}>
             <div className={styles.inputGroup}>
               <label>Contraseña</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="****************"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="****************"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={styles.inputWithIcon}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <Image
+                    src={showPassword ? "/icons/eye.svg" : "/icons/eye-off.svg"}
+                    alt="Toggle password"
+                    width={20}
+                    height={20}
+                  />
+                </button>
+              </div>
             </div>
+
             <div className={styles.inputGroup}>
               <label>Confirmar contraseña</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="****************"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="****************"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className={styles.inputWithIcon}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  <Image
+                    src={
+                      showConfirmPassword
+                        ? "/icons/eye.svg"
+                        : "/icons/eye-off.svg"
+                    }
+                    alt="Toggle confirm password"
+                    width={20}
+                    height={20}
+                  />
+                </button>
+              </div>
             </div>
 
             <div className={styles.requirementsText}>
@@ -282,7 +328,6 @@ export default function Register() {
         Establece tus preferencias para recibir recomendaciones personalizadas
       </p>
 
-      {/* REEMPLAZO: Componente Alert */}
       <div className={styles.alertContainer} style={{ maxWidth: "500px" }}>
         <Alert
           type={alert.type}
@@ -345,6 +390,13 @@ export default function Register() {
             disabled={loading}
           >
             {loading ? "Finalizando..." : "Aceptar preferencias"}
+          </button>
+          <button
+            onClick={() => setStep(1)}
+            className={styles.backButton}
+            disabled={loading}
+          >
+            Regresar
           </button>
         </div>
       </div>

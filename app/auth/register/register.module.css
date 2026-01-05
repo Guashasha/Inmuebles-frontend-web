@@ -33,21 +33,18 @@
   max-width: 900px;
   padding: 0 20px;
 }
+
 .formGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   margin-bottom: 2.5rem;
 }
+
 .column {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-}
-.addressGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
 }
 
 .inputGroup {
@@ -55,12 +52,14 @@
   flex-direction: column;
   gap: 0.5rem;
 }
+
 .inputGroup label {
   font-size: 0.95rem;
   color: #1f2937;
   font-weight: 500;
 }
-.inputGroup input,
+
+.inputGroup input:not(.inputWithIcon),
 .inputGroup select {
   padding: 10px 12px;
   border: 1px solid #e5e7eb;
@@ -68,12 +67,66 @@
   font-size: 0.95rem;
   outline: none;
   background-color: white;
+  width: 100%;
 }
 
-.divider {
-  margin: 10px 0;
+.fullWidthSelect {
+  width: 100%;
+  background-color: white;
+}
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.inputWithIcon {
+  width: 100%;
+  padding: 10px 45px 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: white;
+}
+
+.eyeButton {
+  position: absolute;
+  right: 12px;
+  background: none;
   border: none;
-  border-top: 1px solid #eee;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.eyeButton:hover {
+  opacity: 0.7;
+}
+
+.requirementsText {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.requirementsText p {
+  margin-bottom: 0.5rem;
+}
+
+.requirementsText ul {
+  padding-left: 1.2rem;
+  margin: 0;
+}
+
+.requirementsText li {
+  margin-bottom: 0.3rem;
 }
 
 .actions {
@@ -82,6 +135,7 @@
   align-items: center;
   gap: 1.5rem;
 }
+
 .submitButton {
   background-color: #222;
   color: white;
@@ -91,27 +145,22 @@
   font-size: 1rem;
   cursor: pointer;
   min-width: 200px;
+  transition: background-color 0.2s;
 }
+
+.submitButton:hover {
+  background-color: #000;
+}
+
 .link {
   color: #2563eb;
   text-decoration: none;
   font-size: 0.9rem;
 }
 
-.alert {
-  padding: 10px;
-  border-radius: 6px;
-  text-align: center;
+.alertContainer {
+  width: 100%;
   margin-bottom: 20px;
-  font-size: 0.9rem;
-}
-.alertError {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-.alertSuccess {
-  background-color: #dcfce7;
-  color: #166534;
 }
 
 .preferencesContainer {
@@ -225,6 +274,24 @@
   background-color: #000;
 }
 
+.backButton {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  padding: 15px 40px;
+  border-radius: 8px;
+  border: 1px solid #000;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  max-width: 300px;
+}
+
+.backButton:hover {
+  background-color: #f5f5f5;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -246,27 +313,15 @@
   }
 }
 
-.fullWidthSelect {
-  width: 100%;
-  background-color: white;
+.inputWithIcon::-ms-reveal,
+.inputWithIcon::-ms-clear {
+  display: none;
 }
 
-.requirementsText {
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  color: #666;
-  line-height: 1.6;
-}
-
-.requirementsText p {
-  margin-bottom: 0.5rem;
-}
-
-.requirementsText ul {
-  padding-left: 1.2rem;
-  margin: 0;
-}
-
-.requirementsText li {
-  margin-bottom: 0.3rem;
+.inputWithIcon::-webkit-contacts-auto-fill-button,
+.inputWithIcon::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
 }

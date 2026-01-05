@@ -6,6 +6,7 @@
       "@styles/*": ["./styles/*"],
       "@context/*": ["./context/*"],
       "@constants": ["./lib/constants.js"],
+      "@validators": ["./lib/validators.js"],
       "@images/*": ["./public/images/*"],
       "@icons/*": ["./public/icons/*"],
       "@/services/*": ["./services/*"]

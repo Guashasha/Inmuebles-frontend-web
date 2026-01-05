@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 import Image from "next/image";
@@ -18,8 +18,10 @@ import "./propertyDetails.css";
 
 export default function PropertyDetails() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [property, setProperty] = useState(null);
   const [propertyImages, setPropertyImages] = useState([]);
+  const propertyId = searchParams.id;
 
   function returnToMainMenu() {
     router.back();
@@ -34,10 +36,10 @@ export default function PropertyDetails() {
   }
 
   async function retrieveData() {
-    const propertyData = await getPropertyData();
+    const propertyData = await getPropertyData(propertyId);
 
     propertyData != null
-      ? setProperty(propertyData)
+      ? setProperty(propertyData.data)
       : setProperty({
           idInmueble: 15,
           titulo: "Casa moderna en el centro",

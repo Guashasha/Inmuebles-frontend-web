@@ -12,7 +12,7 @@ export default function PropertyOverview({ propertyOverviewData }) {
   const router = useRouter();
 
   function goToPropertyDetails() {
-    router.push("propertyDetails");
+    router.push(`propertyDetails?id=${propertyOverviewData.idInmueble}`);
   }
 
   return (

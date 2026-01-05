@@ -77,3 +77,8 @@ export async function getPropertyData() {
   //TODO
   return null;
 }
+
+export async function getPropertyImages() {
+  //TODO
+  return null;
+}

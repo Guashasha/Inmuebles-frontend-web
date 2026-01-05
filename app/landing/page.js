@@ -5,7 +5,7 @@ import ToggleButton from "@components/toggleButton/ToggleButton.js";
 import SearchBar from "@components/searchBar/SearchBar.js";
 import PropertyOverview from "@components/propertyOverview/PropertyOverview";
 import { PROPERTY_CATEGORIES } from "@constants";
-import "./page.css";
+import "./landing.css";
 
 export default function HomePage() {
   const [selectedCategories, setSelectedCategories] = useState([]);

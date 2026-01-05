@@ -1,0 +1,207 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 100vh;
+  background-color: white;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.backLink {
+  text-decoration: none;
+  font-size: 1.8rem;
+  color: black;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.tabsContainer {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 30px;
+}
+
+.tabs {
+  display: flex;
+  gap: 30px;
+}
+
+.tab,
+.tabActive {
+  background: none;
+  border: none;
+  padding: 10px 0;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: #888;
+  position: relative;
+}
+
+.tabActive {
+  color: #000;
+  font-weight: 500;
+}
+
+.tabActive::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+}
+
+.contentArea {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.input {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: white;
+}
+
+.input:disabled {
+  background-color: #fcfcfc;
+  color: #555;
+  border-color: #f0f0f0;
+}
+
+.disabled {
+  background-color: #f5f5f5;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 40px;
+  gap: 15px;
+}
+
+.editActions {
+  display: flex;
+  gap: 10px;
+}
+
+.btnEdit,
+.btnSave {
+  background-color: #222;
+  color: white;
+  padding: 10px 30px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.btnEdit:hover,
+.btnSave:hover {
+  background-color: #000;
+}
+
+.backButton {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  padding: 10px 30px;
+  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid #000;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.backButton:hover {
+  background-color: #f5f5f5;
+}
+
+.btnCancel {
+  background-color: transparent;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnSecondary {
+  margin-right: auto;
+  background-color: #f3f3f3;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.alertContainer {
+  margin-bottom: 20px;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .btnSecondary {
+    margin-right: 0;
+    text-align: center;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

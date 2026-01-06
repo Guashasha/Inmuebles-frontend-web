@@ -31,7 +31,10 @@ export async function searchProperties(query, category, page = 1) {
       return;
   }
 
-  const url = apiUrl + propertiesUrl + `?titulo=${query}&idCategoria=${categoryId}&page=${page}`;
+  const url =
+    apiUrl +
+    propertiesUrl +
+    `?titulo=${query}&idCategoria=${categoryId}&page=${page}`;
   const response = await fetch(url);
 
   return await response.json();
@@ -52,8 +55,8 @@ export async function createProperty(property) {
     tipoConstruccion,
     referencias,
     direccion,
-    subtipo
-  ].every(field => field in property);
+    subtipo,
+  ].every((field) => field in property);
 
   if (!containsFields) {
     console.error("La propiedad no tiene todos los campos necesarios");
@@ -62,12 +65,12 @@ export async function createProperty(property) {
 
   const url = apiUrl + propertiesUrl;
   const response = await fetch(url, {
-    method: 'POST',
+    method: "POST",
     headers: {
-        // TODO conseguir jwt
-        'Authorization': 'Bearer ' + jwt
+      // TODO conseguir jwt
+      Authorization: "Bearer " + jwt,
     },
-    body: JSON.stringify(property)
+    body: JSON.stringify(property),
   });
 
   return await response.json();
@@ -77,19 +80,37 @@ export async function getPropertyData(propertyId) {
   const url = `${apiUrl}${propertiesUrl}/${propertyId}`;
   const response = await fetch(url);
 
-  return await response.json().catch(() => {return null});
+  return await response.json().catch(() => {
+    return null;
+  });
 }
 
 export async function getPropertyImages(propertyId) {
   const url = `${apiUrl}${propertiesUrl}/${propertyId}/images`;
   const response = await fetch(url);
 
-  return await response.json().catch(() => {return null});
+  return await response.json().catch(() => {
+    return null;
+  });
 }
 
 export async function contactLandlord(propertyId) {
   const url = `${apiUrl}${propertiesUrl}/${propertyId}/contact`;
   const response = await fetch(url);
 
-  return await response.json().catch(() => {return null});
+  return await response.json().catch(() => {
+    return null;
+  });
+}
+
+export async function scheduleVisitToProperty(propertyId, date) {
+  const url = `${apiUrl}${propertiesUrl}/${propertyId}/visit`;
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({ fechaVisita: date }),
+  });
+
+  return await response.json().catch(() => {
+    return null;
+  });
 }

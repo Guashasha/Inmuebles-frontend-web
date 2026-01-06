@@ -14,9 +14,8 @@ import {
   getPropertyData,
   getPropertyImages,
   contactLandlord,
+  scheduleVisitToProperty,
 } from "@services/PropertyService.js";
-import prevImage from "@icons/left-arrow.svg";
-import nextImage from "@icons/right-arrow.svg";
 import noImage from "@icons/no-image.svg";
 import locationIcon from "@icons/location.svg";
 import "./propertyDetails.css";
@@ -47,8 +46,14 @@ export default function PropertyDetails() {
     router.push("/propertyDetails/buyOrRent");
   }
 
-  function scheduleVisit() {
-    alert("TODO");
+  function scheduleVisit(date) {
+    if (!date) {
+      alert("Ingrese una fecha.");
+      return;
+    }
+
+    const response = scheduleVisitToProperty(property.idInmueble, date).data;
+    alert(response.mensaje);
   }
 
   const carouselSettings = {
@@ -214,108 +219,144 @@ export default function PropertyDetails() {
     return <p>cargando</p>;
   }
 
+  // componentes ui
+  function Title() {
+    return (
+      <div className="navigation-container">
+        <ReturnButton onClick={returnToMainMenu} />
+        <div className="title-container">
+          <h1>{property.titulo}</h1>
+          <p>{property.Direccion.ciudad}</p>
+        </div>
+      </div>
+    );
+  }
+
+  function Carousel() {
+    return (
+      <div className="carousel">
+        <Slider {...carouselSettings}>
+          {propertyImages.map((image) => (
+            <div className="property-image">
+              <Image
+                className="property-image"
+                alt="imagen de inmueble"
+                width="100"
+                src={image.imagenRender}
+                key={image.id}
+              />
+            </div>
+          ))}
+        </Slider>
+      </div>
+    );
+  }
+
+  function PropertyCategories() {
+    return (
+      <div className="categories-container">
+        <p className="category-tag">
+          {property.SubtipoInmueble.CategoriaInmueble.nombre}
+        </p>
+        <p className="category-tag">{property.SubtipoInmueble.nombre}</p>
+      </div>
+    );
+  }
+
+  function ExtraPropertyInfo() {
+    return (
+      <div className="extra-info-container">
+        <div>
+          <p>Amenidades</p>
+        </div>
+        <div>
+          <p>Servicios</p>
+        </div>
+      </div>
+    );
+  }
+
+  function PriceModule() {
+    return (
+      <div className="price-container">
+        <p>Precio</p>
+        <p>
+          {property.Publicacion.tipoOperacion === "Venta"
+            ? "$" + property.Publicacion.precioVenta
+            : "$" + property.Publicacion.precioRentaMensual + "/mes"}
+        </p>
+        <p>Disponible para {property.Publicacion.tipoOperacion}</p>
+        <Popup
+          trigger={
+            <button className="secondary-button">Contactar arrendador</button>
+          }
+          position="right center"
+          modal
+          nested
+        >
+          {(close) => (
+            <Contact onButtonClick={close} landlord={contactLandlordClick()} />
+          )}
+        </Popup>
+        <Popup
+          trigger={
+            <button className="secondary-button">Programar visita</button>
+          }
+        >
+          {(close) => (
+            <Visit
+              propertyId={property.idInmueble}
+              scheduleVisit={scheduleVisit}
+              close={close}
+            />
+          )}
+        </Popup>
+        <Popup
+          trigger={
+            <button className="primary-button">
+              {property.Publicacion.tipoOperacion === "Venta"
+                ? "Comprar"
+                : "Rentar"}
+            </button>
+          }
+          position="right center"
+          modal
+          nested
+        >
+          <BuyOrRent onPay={buyOrRent} />
+        </Popup>
+      </div>
+    );
+  }
+
+  function LocationModule() {
+    return (
+      <div className="map-container">
+        <div>
+          <p>Ubicación</p>
+          <Image alt="icono ubicacion" src={locationIcon} width="30" />
+        </div>
+        {/* Aquí ubicación*/}
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="main-content">
         <div className="left-side-content">
-          <div className="navigation-container">
-            <ReturnButton onClick={returnToMainMenu} />
-            <div className="title-container">
-              <h1>{property.titulo}</h1>
-              <p>{property.Direccion.ciudad}</p>
-            </div>
-          </div>
-
+          <Title />
           <div className="property-info">
-            <div className="carousel">
-              <Slider {...carouselSettings}>
-                {propertyImages.map((image) => (
-                  <div className="property-image">
-                    <Image
-                      className="property-image"
-                      alt="imagen de inmueble"
-                      width="100"
-                      src={image.imagenRender}
-                      key={image.id}
-                    />
-                  </div>
-                ))}
-              </Slider>
-            </div>
-
-            <div className="categories-container">
-              <p className="category-tag">
-                {property.SubtipoInmueble.CategoriaInmueble.nombre}
-              </p>
-              <p className="category-tag">{property.SubtipoInmueble.nombre}</p>
-            </div>
-
+            <Carousel />
+            <PropertyCategories />
             <p className="description">{property.descripcion}</p>
-
-            <div className="extra-info-container">
-              <div>
-                <p>Amenidades</p>
-              </div>
-              <div>
-                <p>Servicios</p>
-              </div>
-            </div>
+            <ExtraPropertyInfo />
           </div>
         </div>
 
         <div className="side-bar">
-          <div className="price-container">
-            <p>Precio</p>
-            <p>
-              {property.Publicacion.tipoOperacion === "Venta"
-                ? "$" + property.Publicacion.precioVenta
-                : "$" + property.Publicacion.precioRentaMensual + "/mes"}
-            </p>
-            <p>Disponible para {property.Publicacion.tipoOperacion}</p>
-            <Popup
-              trigger={
-                <button className="secondary-button">
-                  Contactar arrendador
-                </button>
-              }
-              position="right center"
-              modal
-              nested
-            >
-              {close => (
-                <Contact
-                  onButtonClick={close}
-                  landlord={contactLandlordClick()}
-                />
-              )}
-            </Popup>
-            <Popup
-              trigger={
-                <button className="secondary-button">Programar visita</button>
-              }
-            >
-              {(close) => <Visit />}
-            </Popup>
-            <Popup
-              trigger={
-                <button className="primary-button">
-                  {property.Publicacion.tipoOperacion === "Venta"
-                    ? "Comprar"
-                    : "Rentar"}
-                </button>
-              }
-            >
-              <BuyOrRent />
-            </Popup>
-          </div>
-
-          <div className="map-container">
-            <div>
-              <p>Ubicación</p>
-              <Image alt="icono ubicacion" src={locationIcon} width="30" />
-            </div>
-            {/* Aquí ubicación*/}
-          </div>
+          <PriceModule />
+          <LocationModule />
         </div>
       </div>
     </div>

@@ -32,7 +32,11 @@ export default function PropertyDetails() {
   }
 
   function buyOrRent() {
-    alert("TODO");
+    router.push("/propertyDetails/buyOrRent");
+  }
+
+  function scheduleVisit() {
+    router.push("/propertyDetails/visit");
   }
 
   async function retrieveData() {
@@ -136,18 +140,24 @@ export default function PropertyDetails() {
 
     images != null
       ? setPropertyImages(images.data)
-      : setPropertyImages([{ id: 1, nombre: "test.png", imagenRender: noImage }]);
+      : setPropertyImages([
+          { id: 1, nombre: "test.png", imagenRender: noImage },
+        ]);
   }
 
   useEffect(() => {
     retrieveData();
   }, []);
 
+  useEffect(() => {
+    if (property && property.idInmueble) {
+      retrieveImages();
+    }
+  }, [property]);
+
   if (!property) {
     return <p>cargando</p>;
   }
-
-  if (property) retrieveImages();
 
   return (
     <div>
@@ -164,7 +174,12 @@ export default function PropertyDetails() {
           <div className="property-info">
             <div className="image-controls">
               <button className="img-control-button">
-                <Image width="20" alt="imagen anterior" src={prevImage} />
+                <Image
+                  width="20"
+                  alt="imagen anterior"
+                  src={prevImage}
+                  key="bck"
+                />
               </button>
               {propertyImages.map((image) => (
                 <Image
@@ -172,10 +187,16 @@ export default function PropertyDetails() {
                   alt="imagen de inmueble"
                   width="100"
                   src={image.imagenRender}
+                  key={image.id}
                 />
               ))}
               <button className="img-control-button">
-                <Image width="20" alt="imagen siguiente" src={nextImage} />
+                <Image
+                  width="20"
+                  alt="imagen siguiente"
+                  src={nextImage}
+                  key="nxt"
+                />
               </button>
             </div>
 
@@ -214,6 +235,11 @@ export default function PropertyDetails() {
               onClick={contactLandlord}
             />
             <Button
+              type="secondary"
+              text="Programar visita"
+              onClick={scheduleVisit}
+            />
+            <Button
               text={
                 property.Publicacion.tipoOperacion === "Venta"
                   ? "Comprar"
@@ -228,7 +254,7 @@ export default function PropertyDetails() {
               <p>Ubicación</p>
               <Image alt="icono ubicacion" src={locationIcon} width="30" />
             </div>
-            {/* Aquí ubicación*/ }
+            {/* Aquí ubicación*/}
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@
       "@validators": ["./lib/validators.js"],
       "@images/*": ["./public/images/*"],
       "@icons/*": ["./public/icons/*"],
-      "@/services/*": ["./services/*"]
+      "@services/*": ["./services/*"]
     }
   }
 }

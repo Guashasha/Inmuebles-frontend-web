@@ -77,12 +77,12 @@ export async function getPropertyData(propertyId) {
   const url = `${apiUrl}${propertiesUrl}/${propertyId}`;
   const response = await fetch(url);
 
-  return await response.json();
+  return await response.json().catch(() => {return null});
 }
 
 export async function getPropertyImages(propertyId) {
   const url = `${apiUrl}${propertiesUrl}/${propertyId}/images`;
   const response = await fetch(url);
 
-  return await response.json();
+  return await response.json().catch(() => {return null});
 }

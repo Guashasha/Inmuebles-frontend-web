@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import ToggleButton from "@components/toggleButton/ToggleButton.js";
 import SearchBar from "@components/searchBar/SearchBar.js";
 import PropertyOverview from "@components/propertyOverview/PropertyOverview";
@@ -8,7 +8,8 @@ import { PROPERTY_CATEGORIES } from "@constants";
 import "./landing.css";
 
 export default function HomePage() {
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("1");
+  const toggleButtonRefs = useRef({});
 
   const properties = [
     {
@@ -73,20 +74,18 @@ export default function HomePage() {
       city: "Coatepec",
       price: "$100,000",
       action: "Renta",
-    }
+    },
   ];
 
   function searchProperties(search) {
     alert(selectedCategories);
   }
 
-  function handleCategoryToggle(categoryId, isToggled) {
-    setSelectedCategories((prev) => {
-      if (isToggled) {
-        return prev.includes(categoryId) ? prev : [...prev, categoryId];
-      } else {
-        return prev.filter((id) => id !== categoryId);
-      }
+  function handleCategoryToggle(categoryId, _state) {
+    setSelectedCategory(categoryId);
+
+    Object.values(toggleButtonRefs.current).forEach((element) => {
+      element.turnOffIfNotValue(categoryId);
     });
   }
 
@@ -105,7 +104,12 @@ export default function HomePage() {
                 key={category.id}
                 label={category.label}
                 value={category.id}
+                isToggled={category.id === selectedCategory}
+                exclusive={true}
                 onToggle={handleCategoryToggle}
+                ref={(element) =>
+                  (toggleButtonRefs.current[category.id] = element)
+                }
               />
             ))}
           </div>

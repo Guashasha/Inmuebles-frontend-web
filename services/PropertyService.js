@@ -86,3 +86,10 @@ export async function getPropertyImages(propertyId) {
 
   return await response.json().catch(() => {return null});
 }
+
+export async function contactLandlord(propertyId) {
+  const url = `${apiUrl}${propertiesUrl}/${propertyId}/contact`;
+  const response = await fetch(url);
+
+  return await response.json().catch(() => {return null});
+}

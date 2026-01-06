@@ -4,17 +4,24 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 import Image from "next/image";
+import Popup from "reactjs-popup";
+import Slider from "react-slick";
 import ReturnButton from "@components/returnButton/ReturnButton";
-import Button from "@components/button/Button";
+import Contact from "./contact/Contact";
+import Visit from "./visit/Visit";
+import BuyOrRent from "./buyOrRent/BuyOrRent";
 import {
   getPropertyData,
   getPropertyImages,
+  contactLandlord,
 } from "@services/PropertyService.js";
 import prevImage from "@icons/left-arrow.svg";
 import nextImage from "@icons/right-arrow.svg";
 import noImage from "@icons/no-image.svg";
 import locationIcon from "@icons/location.svg";
 import "./propertyDetails.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 export default function PropertyDetails() {
   const router = useRouter();
@@ -27,8 +34,13 @@ export default function PropertyDetails() {
     router.back();
   }
 
-  function contactLandlord() {
-    alert("TODO");
+  function contactLandlordClick() {
+    return (
+      contactLandlord(property.idInmueble).data || {
+        telefono: "1237896540",
+        correo: "ejemplo@correo.com",
+      }
+    );
   }
 
   function buyOrRent() {
@@ -36,8 +48,50 @@ export default function PropertyDetails() {
   }
 
   function scheduleVisit() {
-    router.push("/propertyDetails/visit");
+    alert("TODO");
   }
+
+  const carouselSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+
+    appendDots: (dots) => (
+      <div>
+        <ul
+          style={{
+            margin: "0px",
+            padding: "0px",
+          }}
+        >
+          {" "}
+          {dots}{" "}
+        </ul>
+      </div>
+    ),
+
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+        },
+      },
+    ],
+  };
 
   async function retrieveData() {
     const propertyData = await getPropertyData(propertyId);
@@ -142,6 +196,7 @@ export default function PropertyDetails() {
       ? setPropertyImages(images.data)
       : setPropertyImages([
           { id: 1, nombre: "test.png", imagenRender: noImage },
+          { id: 1, nombre: "test.png", imagenRender: noImage },
         ]);
   }
 
@@ -172,32 +227,20 @@ export default function PropertyDetails() {
           </div>
 
           <div className="property-info">
-            <div className="image-controls">
-              <button className="img-control-button">
-                <Image
-                  width="20"
-                  alt="imagen anterior"
-                  src={prevImage}
-                  key="bck"
-                />
-              </button>
-              {propertyImages.map((image) => (
-                <Image
-                  className="property-image"
-                  alt="imagen de inmueble"
-                  width="100"
-                  src={image.imagenRender}
-                  key={image.id}
-                />
-              ))}
-              <button className="img-control-button">
-                <Image
-                  width="20"
-                  alt="imagen siguiente"
-                  src={nextImage}
-                  key="nxt"
-                />
-              </button>
+            <div className="carousel">
+              <Slider {...carouselSettings}>
+                {propertyImages.map((image) => (
+                  <div className="property-image">
+                    <Image
+                      className="property-image"
+                      alt="imagen de inmueble"
+                      width="100"
+                      src={image.imagenRender}
+                      key={image.id}
+                    />
+                  </div>
+                ))}
+              </Slider>
             </div>
 
             <div className="categories-container">
@@ -229,24 +272,41 @@ export default function PropertyDetails() {
                 : "$" + property.Publicacion.precioRentaMensual + "/mes"}
             </p>
             <p>Disponible para {property.Publicacion.tipoOperacion}</p>
-            <Button
-              type="secondary"
-              text="Contactar arrendador"
-              onClick={contactLandlord}
-            />
-            <Button
-              type="secondary"
-              text="Programar visita"
-              onClick={scheduleVisit}
-            />
-            <Button
-              text={
-                property.Publicacion.tipoOperacion === "Venta"
-                  ? "Comprar"
-                  : "Rentar"
+            <Popup
+              trigger={
+                <button className="secondary-button">
+                  Contactar arrendador
+                </button>
               }
-              onClick={buyOrRent}
-            />
+              position="right center"
+              modal
+              nested
+            >
+              {close => (
+                <Contact
+                  onButtonClick={close}
+                  landlord={contactLandlordClick()}
+                />
+              )}
+            </Popup>
+            <Popup
+              trigger={
+                <button className="secondary-button">Programar visita</button>
+              }
+            >
+              {(close) => <Visit />}
+            </Popup>
+            <Popup
+              trigger={
+                <button className="primary-button">
+                  {property.Publicacion.tipoOperacion === "Venta"
+                    ? "Comprar"
+                    : "Rentar"}
+                </button>
+              }
+            >
+              <BuyOrRent />
+            </Popup>
           </div>
 
           <div className="map-container">

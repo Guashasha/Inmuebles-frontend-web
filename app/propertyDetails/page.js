@@ -42,10 +42,6 @@ export default function PropertyDetails() {
     );
   }
 
-  function buyOrRent() {
-    router.push("/propertyDetails/buyOrRent");
-  }
-
   function scheduleVisit(date) {
     if (!date) {
       alert("Ingrese una fecha.");
@@ -323,7 +319,7 @@ export default function PropertyDetails() {
           modal
           nested
         >
-          <BuyOrRent onPay={buyOrRent} />
+          {(close) => <BuyOrRent close={close} property={property} />}
         </Popup>
       </div>
     );

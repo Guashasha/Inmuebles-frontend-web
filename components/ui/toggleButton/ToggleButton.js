@@ -1,46 +1,68 @@
 "use client";
 
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import styles from "./ToggleButton.module.css";
 
-export default function ToggleButton({
-  label,
-  value,
-  disabled = false,
-  isToggled = false,
-  onToggle
-}) {
-  const [toggleValue, setToggleValue] = useState(isToggled);
+const ToggleButton = forwardRef(
+  (
+    {
+      label,
+      value,
+      disabled = false,
+      isToggled = false,
+      exclusive = false,
+      onToggle,
+    },
+    ref
+  ) => {
+    const [toggleValue, setToggleValue] = useState(isToggled);
 
-  function handleClick() {
-    if (disabled) return;
+    useImperativeHandle(ref, () => ({
+      turnOffIfNotValue: (condition) => {
+        if (value !== condition)
+        setToggleValue(false);
+      }
+    }));
 
-    const newState = !toggleValue;
-    setToggleValue(newState);
+    function handleClick() {
+      if (disabled) return;
 
-    if (onToggle) {
-      onToggle(value, newState);
+      if (exclusive) {
+        if (!toggleValue) {
+          setToggleValue(true);
+        } else {
+          return;
+        }
+      } else {
+        setToggleValue(!toggleValue);
+      }
+
+      if (onToggle) {
+        onToggle(value, toggleValue);
+      }
     }
-  };
 
-  const buttonClass = [
-    styles.toggleButton,
-    toggleValue ? styles.toggled : "",
-    disabled ? styles.disabled : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+    const buttonClass = [
+      styles.toggleButton,
+      toggleValue ? styles.toggled : "",
+      disabled ? styles.disabled : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
 
-  return (
-    <button
-      disabled={disabled}
-      data-value={value}
-      data-toggled={isToggled}
-      aria-pressed={isToggled}
-      onClick={handleClick}
-      className={buttonClass}
-    >
-      {label}
-    </button>
-  );
-}
+    return (
+      <button
+        disabled={disabled}
+        data-value={value}
+        data-toggled={isToggled}
+        aria-pressed={isToggled}
+        onClick={handleClick}
+        className={buttonClass}
+      >
+        {label}
+      </button>
+    );
+  }
+);
+
+export default ToggleButton;

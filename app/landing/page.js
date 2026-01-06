@@ -123,7 +123,12 @@ export default function HomePage() {
                 key={category.id}
                 label={category.label}
                 value={category.id}
+                isToggled={category.id === selectedCategory}
+                exclusive={true}
                 onToggle={handleCategoryToggle}
+                ref={(element) =>
+                  (toggleButtonRefs.current[category.id] = element)
+                }
               />
             ))}
           </div>

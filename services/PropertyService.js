@@ -65,6 +65,8 @@ export async function searchProperties(query, categoryId, page = 1) {
   return await response.json();
 }
 
+// --- Crear y Publicar ---
+
 export async function createProperty(propertyData) {
   const token = getToken();
   if (!token) throw new Error("No estás autenticado");
@@ -114,4 +116,51 @@ export async function uploadPropertyImages(propertyId, files) {
   }
 
   return await response.json();
+}
+
+// --- Interacciones (Contacto y Visitas) ---
+
+export async function contactLandlord(propertyId) {
+  // Ajusta si tu endpoint requiere token o es público
+  const token = getToken(); 
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  
+  const url = `${API_URL}${PROPERTY_ENDPOINT}/${propertyId}/contact`;
+  
+  try {
+    const response = await fetch(url, { headers });
+    if (!response.ok) throw new Error("Error al contactar al arrendador");
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "No se pudo obtener la información de contacto." };
+  }
+}
+
+export async function scheduleVisitToProperty(propertyId, date) {
+  const token = getToken();
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+
+  const url = `${API_URL}${PROPERTY_ENDPOINT}/${propertyId}/visit`;
+  
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({ fechaVisita: date }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Error al agendar visita");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error.message };
+  }
 }

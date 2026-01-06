@@ -10,13 +10,6 @@ export default function PropertyOverview({ propertyOverviewData }) {
   const property = propertyOverviewData;
 
   function goToPropertyDetails() {
-    console.log("Navegando a propiedad con ID:", property.idInmueble); // <-- DEBUG
-
-    if (!property.idInmueble) {
-      alert("Error: Esta propiedad no tiene ID válido.");
-      return;
-    }
-
     //router.push(`/property/propertyDetails/${property.idInmueble}`);
     router.push(`/property/propertyDetails?id=${property.idInmueble}`);
   }

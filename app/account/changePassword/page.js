@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import AccountService from "@/services/AccountService";
+import AccountService from "@services/AccountService";
 import Alert from "@components/alert/Alert";
 import { validatePassword } from "@validators";
 import styles from "./changePassword.module.css";

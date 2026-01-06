@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import AuthService from "@/services/AuthService";
+import AuthService from "@services/AuthService";
 import { LOCATIONS, PROPERTY_CATEGORIES } from "@constants";
 import Alert from "@components/alert/Alert";
 import { validateRegisterData } from "@validators";

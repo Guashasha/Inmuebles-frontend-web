@@ -1,30 +1,63 @@
 .card {
-    cursor: pointer;
-    background: linear-gradient(to bottom, white, aliceblue);
-    border-radius: 8;
-    border: 1px solid rgb(218, 238, 255);
-    padding: 0;
+  cursor: pointer;
+  background: linear-gradient(to bottom, white, #f0f8ff);
+  border-radius: 8px;
+  border: 1px solid rgb(218, 238, 255);
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.card p {
-    padding: 0 2vw 0 2vw;
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.card img {
-    width: 100%;
-    margin-bottom: 0.5vh;
+.imageContainer {
+  width: 100%;
+  height: 200px;
+  background-color: #e0e0e0;
+}
+
+.propertyImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cardContent {
+  padding: 10px 15px;
 }
 
 .tag {
-    margin: 0.8vh 0;
+  margin: 5px 0;
+  font-weight: 600;
+  color: #333;
+}
+
+.title {
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cityTag {
-    font-size: 85%;
-    margin: 0.8vh 0 2vh 0;
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
 }
-
 .actionTag {
-    font-size: 85%;
-    margin: 0.8vh 0 1.5vh 0;
+  font-size: 0.75rem;
+  margin-top: auto;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  padding: 2px 8px;
+  border-radius: 12px;
+  width: fit-content;
 }

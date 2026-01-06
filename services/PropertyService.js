@@ -1,79 +1,117 @@
-const apiUrl = process.env.API_URL;
-const propertiesUrl = process.env.PROPERTIES_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const PROPERTY_ENDPOINT = "/api/properties";
 
-export async function getRecomendedProperties(page) {
-  const url = apiUrl + propertiesUrl + `/recommended?page=${page}`;
+const getToken = () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("token");
+  }
+  return null;
+};
+
+export async function getPropertyData(id) {
+  const url = `${API_URL}${PROPERTY_ENDPOINT}/${id}`;
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Error al cargar la propiedad");
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error("Error en getPropertyData:", error);
+    throw error;
+  }
+}
+
+export async function getPropertyImages(id) {
+  const url = `${API_URL}${PROPERTY_ENDPOINT}/${id}/images`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return { success: false, data: [] };
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { success: false, data: [] };
+  }
+}
+
+export async function getRecomendedProperties(page = 1) {
+  const token = getToken();
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  const url = `${API_URL}${PROPERTY_ENDPOINT}/recommended?page=${page}`;
+
+  try {
+    const response = await fetch(url, { headers });
+    if (!response.ok) throw new Error("Error al obtener recomendados");
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { success: false, data: [] };
+  }
+}
+
+export async function searchProperties(query, categoryId, page = 1) {
+  const catParam = categoryId ? `&idCategoria=${categoryId}` : "";
+  const queryParam = query ? `&titulo=${query}` : "";
+
+  const url = `${API_URL}${PROPERTY_ENDPOINT}?page=${page}${queryParam}${catParam}`;
+
   const response = await fetch(url);
-
   return await response.json();
 }
 
-export async function searchProperties(query, category, page = 1) {
-  let categoryId;
-  switch (category) {
-    case "casa":
-      categoryId = 1;
-      break;
-    case "departamento":
-      categoryId = 2;
-      break;
-    case "terreno/lote":
-      categoryId = 3;
-      break;
-    case "comercial/industrial":
-      categoryId = 4;
-      break;
-    case "otros":
-      categoryId = 5;
-      break;
-    default:
-      console.error("Categoría de propiedad incorrecta");
-      return;
-  }
+export async function createProperty(propertyData) {
+  const token = getToken();
+  if (!token) throw new Error("No estás autenticado");
 
-  const url = apiUrl + propertiesUrl + `?titulo=${query}&idCategoria=${categoryId}&page=${page}`;
-  const response = await fetch(url);
+  const url = `${API_URL}${PROPERTY_ENDPOINT}`;
 
-  return await response.json();
-}
-
-export async function createProperty(property) {
-  const containsFields = [
-    titulo,
-    descripcion,
-    numBaños,
-    numMediosBaños,
-    numPisos,
-    numRecamaras,
-    superficieConstruida,
-    superficieTotal,
-    antiguedad,
-    pisoUbicacion,
-    tipoConstruccion,
-    referencias,
-    direccion,
-    subtipo
-  ].every(field => field in property);
-
-  if (!containsFields) {
-    console.error("La propiedad no tiene todos los campos necesarios");
-    return;
-  }
-
-  const url = apiUrl + propertiesUrl;
   const response = await fetch(url, {
-    method: 'POST',
+    method: "POST",
     headers: {
-        // TODO conseguir jwt
-        'Authorization': 'Bearer ' + jwt
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(property)
+    body: JSON.stringify(propertyData),
   });
 
-  return await response.json();
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || data.error || "Error al crear la propiedad"
+    );
+  }
+
+  return data;
 }
 
-export async function getPropertyData() {
-  //TODO
-  return null;
+export async function uploadPropertyImages(propertyId, files) {
+  const token = getToken();
+  if (!token) throw new Error("No estás autenticado");
+
+  const formData = new FormData();
+  files.forEach((file) => formData.append("images", file));
+
+  const url = `${API_URL}${PROPERTY_ENDPOINT}/${propertyId}/images`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Error al subir imágenes");
+  }
+
+  return await response.json();
 }

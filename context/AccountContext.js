@@ -7,7 +7,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import AccountService from "@/services/AccountService";
+import AccountService from "@services/AccountService";
 
 const AccountContext = createContext();
 

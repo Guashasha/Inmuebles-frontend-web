@@ -2,6 +2,8 @@
   "compilerOptions": {
     "paths": {
       "@components/*": ["./components/ui/*"],
+      "@map/*": ["./components/map/*"],
+      "@carousel/*": ["./components/imageCarousel/*"],
       "@layouts/*": ["./components/layout/*"],
       "@styles/*": ["./styles/*"],
       "@context/*": ["./context/*"],
@@ -9,7 +11,7 @@
       "@validators": ["./lib/validators.js"],
       "@images/*": ["./public/images/*"],
       "@icons/*": ["./public/icons/*"],
-      "@/services/*": ["./services/*"]
+      "@services/*": ["./services/*"]
     }
   }
 }

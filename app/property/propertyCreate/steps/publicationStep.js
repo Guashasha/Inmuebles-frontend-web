@@ -154,7 +154,7 @@ export default function PublicationStep() {
         message: "¡Propiedad publicada exitosamente!",
       });
       setTimeout(() => {
-        router.push("/dashboard/my-properties");
+        router.push("/property/propertiesMenu");
       }, 2000);
     } catch (error) {
       console.error(error);

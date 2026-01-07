@@ -1,5 +1,38 @@
+.popup {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.popup h3 {
+  margin-bottom: 1.5rem;
+  color: #111827;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 0.75rem;
+}
+
 .section-tag {
-    font-size: large;
-    padding-top: 1vh;
-    margin-bottom: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.popup p:not(.section-tag) {
+  font-size: 1.1rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.popup button {
+  margin-top: 1.5rem;
+  width: 100%;
 }

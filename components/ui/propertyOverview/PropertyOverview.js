@@ -1,16 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-// import { useState } from "react";
 import "./PropertyOverview.css";
-import logo from "@images/logo.png";
+import logo from "@images/logo.svg";
 
 export default function PropertyOverview({ propertyOverviewData }) {
   const router = useRouter();
   const property = propertyOverviewData;
 
   function goToPropertyDetails() {
-    //router.push(`/property/propertyDetails/${property.idInmueble}`);
     router.push(`/property/propertyDetails?id=${property.idInmueble}`);
   }
 
@@ -20,19 +18,21 @@ export default function PropertyOverview({ propertyOverviewData }) {
       : logo.src || logo;
 
   return (
-    <div className="card" onClick={goToPropertyDetails}>
-      <div className="imageContainer">
+    <div className="po-card" onClick={goToPropertyDetails}>
+      <div className="po-imageContainer">
         <img
-          className="propertyImage"
+          className="po-propertyImage"
           src={imageSource}
           alt={property.title || "Inmueble"}
         />
       </div>
-      <div className="cardContent">
-        <p className="tag title">{property.title}</p>
-        <p className="cityTag">{property.city}</p>
-        <p className="tag price">{property.price}</p>
-        <p className="actionTag">{property.action}</p>
+      <div className="po-cardContent">
+        <p className="po-title">{property.title}</p>
+        <p className="po-city">{property.city}</p>
+        <p className="po-price">{property.price}</p>
+        <div className="po-footer">
+          <p className="po-actionTag">{property.action}</p>
+        </div>
       </div>
     </div>
   );

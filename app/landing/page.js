@@ -9,61 +9,54 @@ import {
   getRecomendedProperties,
   searchProperties as searchService,
 } from "@services/PropertyService";
-import "./page.css";
+import "./landing.css";
 
 export default function HomePage() {
   const [properties, setProperties] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadInitialData = async () => {
-      setLoading(true);
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      let rawData = [];
+  const loadDefaultProperties = async () => {
+    setLoading(true);
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    let rawData = [];
 
-      try {
-        if (token) {
-          const response = await getRecomendedProperties();
-          if (response.success && Array.isArray(response.data)) {
-            rawData = response.data;
-          } else {
-            const fallbackResponse = await searchService("", null);
-            rawData = fallbackResponse.success ? fallbackResponse.data : [];
-          }
+    try {
+      if (token) {
+        const response = await getRecomendedProperties();
+        if (response.success && Array.isArray(response.data)) {
+          rawData = response.data;
         } else {
-          const response = await searchService("", null);
-          rawData = response.success ? response.data : [];
+          const fallback = await searchService("", null);
+          rawData = fallback.success ? fallback.data : [];
         }
-
-        const mappedProperties = rawData
-          .map(mapBackendToFrontend)
-          .filter((p) => p.idInmueble);
-
-        setProperties(mappedProperties);
-      } catch (error) {
-        console.error("Error cargando propiedades:", error);
-      } finally {
-        setLoading(false);
+      } else {
+        const response = await searchService("", null);
+        rawData = response.success ? response.data : [];
       }
-    };
 
-    loadInitialData();
+      setProperties(processProperties(rawData));
+    } catch (error) {
+      console.error("Error cargando propiedades:", error);
+      setProperties([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDefaultProperties();
   }, []);
 
-  const handleSearch = async (query) => {
+  const fetchProperties = async (query, categoryId) => {
     setLoading(true);
     try {
-      const categoryId =
-        selectedCategories.length > 0 ? selectedCategories[0] : null;
       const response = await searchService(query, categoryId);
 
       if (response.success && Array.isArray(response.data)) {
-        const mappedProperties = response.data
-          .map(mapBackendToFrontend)
-          .filter((p) => p.idInmueble);
-        setProperties(mappedProperties);
+        setProperties(processProperties(response.data));
       } else {
         setProperties([]);
       }
@@ -75,22 +68,45 @@ export default function HomePage() {
     }
   };
 
-  function handleCategoryToggle(categoryId, isToggled) {
-    setSelectedCategories((prev) => {
-      if (isToggled) return [...prev, categoryId];
-      return prev.filter((id) => id !== categoryId);
-    });
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const currentCategoryId =
+      selectedCategories.length > 0 ? selectedCategories[0] : null;
+    fetchProperties(query, currentCategoryId);
+  };
+
+  function handleCategoryToggle(categoryId) {
+    const id = String(categoryId);
+    let newCategories = [];
+
+    const isAlreadySelected = selectedCategories.includes(id);
+
+    if (isAlreadySelected) {
+      newCategories = [];
+    } else {
+      newCategories = [id];
+    }
+
+    setSelectedCategories(newCategories);
+
+    const categoryToSend = newCategories.length > 0 ? newCategories[0] : null;
+    fetchProperties(searchQuery, categoryToSend);
   }
+
+  const processProperties = (data) => {
+    return data.map(mapBackendToFrontend).filter((p) => p.idInmueble);
+  };
 
   const mapBackendToFrontend = (p) => {
     if (!p) return {};
-
     const safeId = p.id || p.idInmueble;
-
     const precioNum = parseFloat(p.precio) || 0;
+    const divisa = p.divisa || p.Publicacion?.divisa || "MXN";
+
     const precioFormateado = new Intl.NumberFormat("es-MX", {
       style: "currency",
-      currency: p.divisa || "MXN",
+      currency: divisa,
+      minimumFractionDigits: 0,
     }).format(precioNum);
 
     const imagenUrl =
@@ -99,9 +115,13 @@ export default function HomePage() {
     return {
       idInmueble: safeId,
       title: p.titulo || "Propiedad sin título",
-      city: p.ciudad || p.direccion?.ciudad || "Ubicación desconocida",
+      city:
+        p.ciudad ||
+        p.direccion?.ciudad ||
+        p.Direccion?.ciudad ||
+        "Ubicación desconocida",
       price: precioFormateado,
-      action: p.tipoOperacion || "Disponible",
+      action: p.tipoOperacion || p.Publicacion?.tipoOperacion || "Disponible",
       image: imagenUrl,
       beds: p.detallesFisicos?.numRecamaras || 0,
       baths: p.detallesFisicos?.numBaños || 0,
@@ -114,6 +134,7 @@ export default function HomePage() {
       <div className="mainContainer">
         <div className="searchControls">
           <p className="componentTitle">Buscar propiedades</p>
+
           <SearchBar onSearch={handleSearch} />
 
           <div className="categoriesContainer">
@@ -123,36 +144,25 @@ export default function HomePage() {
                 key={category.id}
                 label={category.label}
                 value={category.id}
-                isToggled={category.id === selectedCategory}
-                exclusive={true}
+                isToggled={selectedCategories.includes(String(category.id))}
                 onToggle={handleCategoryToggle}
-                ref={(element) =>
-                  (toggleButtonRefs.current[category.id] = element)
-                }
               />
             ))}
           </div>
-          <button
-            onClick={() => handleSearch("")}
-            className="btnFilter"
-            style={{
-              marginTop: "10px",
-              padding: "8px 16px",
-              cursor: "pointer",
-            }}
-          >
-            Aplicar Filtros
-          </button>
         </div>
 
-        <p className="componentTitle">Propiedades que te podrían gustar</p>
+        <p className="componentTitle">
+          {searchQuery || selectedCategories.length > 0
+            ? "Resultados de búsqueda"
+            : "Propiedades que te podrían gustar"}
+        </p>
 
         {loading ? (
           <div
             className="loadingContainer"
-            style={{ textAlign: "center", padding: "20px" }}
+            style={{ textAlign: "center", padding: "40px" }}
           >
-            Cargando propiedades...
+            <p>Cargando propiedades...</p>
           </div>
         ) : (
           <div className="propertiesGrid">
@@ -165,9 +175,39 @@ export default function HomePage() {
 
             {properties.length === 0 && (
               <div
-                style={{ width: "100%", textAlign: "center", color: "#666" }}
+                style={{
+                  width: "100%",
+                  minHeight: "200px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#666",
+                  padding: "40px",
+                  gridColumn: "1 / -1",
+                }}
               >
-                <p>No se encontraron propiedades disponibles.</p>
+                <p style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
+                  No se encontraron propiedades con estos filtros.
+                </p>
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategories([]);
+                    loadDefaultProperties();
+                  }}
+                  style={{
+                    marginTop: "10px",
+                    textDecoration: "underline",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#3b82f6",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Limpiar filtros
+                </button>
               </div>
             )}
           </div>

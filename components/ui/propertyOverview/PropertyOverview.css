@@ -1,63 +1,78 @@
-.card {
+.po-card {
   cursor: pointer;
-  background: linear-gradient(to bottom, white, #f0f8ff);
-  border-radius: 8px;
-  border: 1px solid rgb(218, 238, 255);
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
   padding: 0;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
-.card:hover {
+.po-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-.imageContainer {
+.po-imageContainer {
   width: 100%;
   height: 200px;
-  background-color: #e0e0e0;
+  background-color: #f3f4f6;
+  position: relative;
 }
 
-.propertyImage {
+.po-propertyImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.cardContent {
-  padding: 10px 15px;
+.po-cardContent {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
-.tag {
-  margin: 5px 0;
+.po-title {
+  font-size: 1.1rem;
   font-weight: 600;
-  color: #333;
-}
-
-.title {
-  font-size: 1rem;
+  color: #111;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.cityTag {
-  font-size: 0.85rem;
-  color: #666;
-  margin: 0 0 10px 0;
-  display: flex;
-  align-items: center;
+.po-city {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
 }
-.actionTag {
-  font-size: 0.75rem;
+
+.po-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000;
+  margin: 4px 0 0 0;
+}
+
+.po-footer {
   margin-top: auto;
-  background-color: #e0f2fe;
-  color: #0369a1;
-  padding: 2px 8px;
+  padding-top: 12px;
+}
+
+.po-actionTag {
+  font-size: 0.75rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  padding: 4px 10px;
   border-radius: 12px;
   width: fit-content;
+  margin: 0;
+  font-weight: 600;
 }

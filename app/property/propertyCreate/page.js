@@ -8,11 +8,13 @@ import BasicInfoStep from "./steps/basicInfoStep";
 import LocationStep from "./steps/locationStep";
 import AmenitiesStep from "./steps/amenitiesStep";
 import PublicationStep from "./steps/publicationStep";
-// import ReturnButton from "@components/ui/returnButton/ReturnButton.js";
+import ReturnButton from "@components/returnButton/ReturnButton";
 import styles from "./property.module.css";
+import { useRouter } from "next/navigation";
 
 function PropertyWizard() {
   const { currentStep } = usePropertyCreation();
+  const router = useRouter();
 
   const renderStep = () => {
     switch (currentStep) {
@@ -32,7 +34,8 @@ function PropertyWizard() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        {/* <ReturnButton href="/landing" /> */}
+        <ReturnButton onClick={() => router.back()} />
+
         <h1 className={styles.title}>Publicar nuevo inmueble</h1>
       </div>
 

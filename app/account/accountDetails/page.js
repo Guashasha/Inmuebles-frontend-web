@@ -1,7 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { AccountProvider, useAccount } from "@context/AccountContext";
 import Alert from "@components/alert/Alert";
+import ReturnButton from "@components/returnButton/ReturnButton";
 import PersonalStep from "./steps/personalStep";
 import AddressStep from "./steps/addressStep";
 import FiscalStep from "./steps/fiscalStep";
@@ -9,8 +11,13 @@ import PreferencesStep from "./steps/preferencesStep";
 import styles from "./account.module.css";
 
 function AccountContent() {
+  const router = useRouter();
   const { activeTab, setActiveTab, loading, profile, alert, setAlert } =
     useAccount();
+
+  const handleReturn = () => {
+    router.back();
+  };
 
   if (loading) {
     return (
@@ -22,7 +29,10 @@ function AccountContent() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
+      <div className={styles.headerRow}>
+        <div className={styles.backBtnWrapper}>
+          <ReturnButton onClick={handleReturn} />
+        </div>
         <h1 className={styles.title}>Mi cuenta</h1>
       </div>
 

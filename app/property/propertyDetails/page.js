@@ -4,10 +4,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-import { getPropertyData } from "@services/PropertyService";
+import {
+  getPropertyData,
+  contactLandlord,
+  scheduleVisitToProperty,
+} from "@services/PropertyService";
 import ImageCarousel from "@carousel/ImageCarousel";
+import Contact from "./contact/Contact";
+import Visit from "./visit/Visit";
 import "./propertyDetails.css";
 import dynamic from "next/dynamic";
+import Alert from "@components/alert/Alert";
+import ReturnButton from "@components/returnButton/ReturnButton";
+import { useUser } from "@context/UserContext";
 
 const MapPicker = dynamic(() => import("@map/MapPicker"), {
   ssr: false,
@@ -20,13 +29,73 @@ export default function PropertyDetails() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const { user } = useUser();
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [landlordInfo, setLandlordInfo] = useState(null);
+  const [loadingContact, setLoadingContact] = useState(false);
+
+  const [alertMessage, setAlertMessage] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
+
+  useEffect(() => {
+    if (alertMessage.show) {
+      const timer = setTimeout(() => {
+        setAlertMessage((prev) => ({ ...prev, show: false }));
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage.show]);
 
   function returnToMainMenu() {
     router.back();
   }
+
+  const handleScheduleVisit = async (propertyId, date) => {
+    try {
+      const response = await scheduleVisitToProperty(propertyId, date);
+      if (response && response.message) {
+        setAlertMessage({
+          show: true,
+          message: response.message,
+          type: "success",
+        });
+      }
+    } catch (error) {
+      setAlertMessage({
+        show: true,
+        message: "Error al programar la visita: " + error.message,
+        type: "error",
+      });
+    }
+  };
+
+  const handleOpenContact = async () => {
+    if (landlordInfo) return;
+
+    try {
+      setLoadingContact(true);
+      const response = await contactLandlord(property.idInmueble);
+
+      if (response && response.data) {
+        setLandlordInfo(response.data);
+      } else {
+        setLandlordInfo({ telefono: "No disponible", correo: "No disponible" });
+      }
+    } catch (error) {
+      console.error("Error al contactar:", error);
+      setLandlordInfo({
+        telefono: "Error al cargar",
+        correo: "Intente más tarde",
+      });
+    } finally {
+      setLoadingContact(false);
+    }
+  };
 
   const formatPrice = (amount, currency = "MXN") => {
     return new Intl.NumberFormat("es-MX", {
@@ -94,21 +163,29 @@ export default function PropertyDetails() {
   const lat = parseFloat(property.Geolocalizacion?.latitud || 0);
   const lng = parseFloat(property.Geolocalizacion?.longitud || 0);
 
+  const isMyProperty =
+    user && property && Number(property.idArrendador) === Number(user.id);
+
   return (
     <div className="details-container">
-      <div className="header-nav">
-        <button onClick={returnToMainMenu} className="back-btn">
-          ← Volver
-        </button>
-        <h2 style={{ fontWeight: "600", margin: 0 }}>
-          Detalles de la Propiedad
-        </h2>
-      </div>
+      {alertMessage.show && (
+        <Alert
+          message={alertMessage.message}
+          type={alertMessage.type}
+          onClose={() => setAlertMessage((prev) => ({ ...prev, show: false }))}
+        />
+      )}
 
       <div className="main-content">
         <div className="left-side-content">
           <div className="property-header">
-            <h1 className="property-title">{property.titulo}</h1>
+            <div className="title-row">
+              <div className="back-btn-wrapper">
+                <ReturnButton onClick={returnToMainMenu} />
+              </div>
+              <h1 className="property-title">{property.titulo}</h1>
+            </div>
+
             <p className="property-location">
               {property.Direccion?.ciudad}, {property.Direccion?.estado}
             </p>
@@ -170,20 +247,98 @@ export default function PropertyDetails() {
             {!isVenta && <span style={{ color: "#6b7280" }}>/mes</span>}
 
             <div className="contact-section">
-              <p style={{ fontSize: "0.9rem", marginBottom: "15px" }}>
+              <p className="publisher-info">
                 <strong>Publicado por:</strong> <br />
-                Arrendador ID: {property.idArrendador}
+                {isMyProperty ? (
+                  <span style={{ color: "#2563eb", fontWeight: "600" }}>
+                    Ti (Es tu propiedad)
+                  </span>
+                ) : (
+                  <span>
+                    {property.Arrendador?.Usuario
+                      ? `${property.Arrendador.Usuario.nombre} ${property.Arrendador.Usuario.apellidos}`
+                      : `Arrendador ID: ${property.idArrendador}`}
+                  </span>
+                )}
               </p>
 
-              <button className="btn-secondary">Contactar arrendador</button>
+              {user && !isMyProperty && (
+                <>
+                  <Popup
+                    trigger={
+                      <button className="btn-secondary">
+                        Contactar arrendador
+                      </button>
+                    }
+                    modal
+                    nested
+                    onOpen={handleOpenContact}
+                  >
+                    {(close) => (
+                      <div className="modal-container">
+                        {loadingContact ? (
+                          <div className="contact-loading">
+                            Obteniendo datos...
+                          </div>
+                        ) : (
+                          <Contact
+                            landlord={
+                              landlordInfo || { telefono: "", correo: "" }
+                            }
+                            onButtonClick={close}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </Popup>
 
-              <button className="btn-primary">
-                {isVenta ? "Comprar" : "Rentar"}
-              </button>
+                  <Popup
+                    trigger={
+                      <button className="btn-secondary btn-schedule">
+                        Programar visita
+                      </button>
+                    }
+                    modal
+                    nested
+                  >
+                    {(close) => (
+                      <Visit
+                        propertyId={property.idInmueble}
+                        scheduleVisit={handleScheduleVisit}
+                        close={close}
+                      />
+                    )}
+                  </Popup>
+
+                  <button className="btn-primary">
+                    {isVenta ? "Comprar" : "Rentar"}
+                  </button>
+                </>
+              )}
+
+              {!user && (
+                <div className="auth-prompt-container">
+                  <p className="auth-prompt-text">
+                    ¿Te interesa esta propiedad?
+                  </p>
+                  <button
+                    className="btn-primary btn-auth-action"
+                    onClick={() => router.push("/auth/login")}
+                  >
+                    Inicia Sesión para contactar
+                  </button>
+                </div>
+              )}
+
+              {isMyProperty && (
+                <div className="owner-message">
+                  Gestiona esta publicación desde tu menú de arrendador.
+                </div>
+              )}
             </div>
 
-            <div style={{ marginTop: "25px" }}>
-              <h4 style={{ marginBottom: "10px" }}>Ubicación</h4>
+            <div className="map-section-wrapper">
+              <h4 className="map-section-title">Ubicación</h4>
               <Popup
                 trigger={
                   <div className="map-trigger">
@@ -214,10 +369,6 @@ export default function PropertyDetails() {
                   </div>
                 )}
               </Popup>
-
-              <button className="btn-secondary btn-view-location">
-                Ver ubicación
-              </button>
             </div>
           </div>
         </div>

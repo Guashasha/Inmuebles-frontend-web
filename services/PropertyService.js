@@ -1,5 +1,6 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PROPERTY_ENDPOINT = "/api/properties";
+const INTERACTIONS_ENDPOINT = "/api/interactions";
 
 const getToken = () => {
   if (typeof window !== "undefined") {
@@ -65,8 +66,6 @@ export async function searchProperties(query, categoryId, page = 1) {
   return await response.json();
 }
 
-// --- Crear y Publicar ---
-
 export async function createProperty(propertyData) {
   const token = getToken();
   if (!token) throw new Error("No estás autenticado");
@@ -118,22 +117,38 @@ export async function uploadPropertyImages(propertyId, files) {
   return await response.json();
 }
 
-// --- Interacciones (Contacto y Visitas) ---
-
 export async function contactLandlord(propertyId) {
-  // Ajusta si tu endpoint requiere token o es público
-  const token = getToken(); 
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
-  
-  const url = `${API_URL}${PROPERTY_ENDPOINT}/${propertyId}/contact`;
-  
+  const token = getToken();
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+
+  const url = `${API_URL}${INTERACTIONS_ENDPOINT}/properties/${propertyId}/contact`;
+
   try {
-    const response = await fetch(url, { headers });
-    if (!response.ok) throw new Error("Error al contactar al arrendador");
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({}),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Error contactLandlord:", {
+        status: response.status,
+        msg: errorData,
+      });
+      throw new Error(errorData.message || "Error al contactar al arrendador");
+    }
+
     return await response.json();
   } catch (error) {
     console.error(error);
-    return { success: false, message: "No se pudo obtener la información de contacto." };
+    return {
+      success: false,
+      message: "No se pudo obtener la información de contacto.",
+    };
   }
 }
 
@@ -143,24 +158,113 @@ export async function scheduleVisitToProperty(propertyId, date) {
     "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),
   };
+  const url = `${API_URL}${INTERACTIONS_ENDPOINT}/properties/${propertyId}/visit`;
 
-  const url = `${API_URL}${PROPERTY_ENDPOINT}/${propertyId}/visit`;
-  
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: headers,
-      body: JSON.stringify({ fechaVisita: date }),
+      body: JSON.stringify({ date: date }),
     });
 
     if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Error al agendar visita");
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Error al agendar visita");
     }
 
     return await response.json();
   } catch (error) {
     console.error(error);
     return { success: false, message: error.message };
+  }
+}
+
+export async function togglePropertyStatus(propertyId) {
+  const token = getToken();
+  if (!token) throw new Error("No estás autenticado");
+
+  const url = `${API_URL}${PROPERTY_ENDPOINT}/${propertyId}/status`;
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Error al cambiar el estado de la publicación"
+      );
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error en togglePropertyStatus:", error);
+    throw error;
+  }
+}
+
+export async function updateVisitStatusAction(visitId, action) {
+  const token = getToken();
+
+  try {
+    const response = await fetch(
+      `${API_URL}${INTERACTIONS_ENDPOINT}/visits/${visitId}/status`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action }),
+      }
+    );
+
+    const data = await response.json();
+    if (!response.ok)
+      throw new Error(data.message || "Error al actualizar visita");
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getMyProperties() {
+  const token = getToken();
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  try {
+    const response = await fetch(
+      `${API_URL}${PROPERTY_ENDPOINT}/my-properties`,
+      { headers }
+    );
+    if (!response.ok) throw new Error("Error al cargar mis propiedades");
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { success: false, data: [] };
+  }
+}
+
+export async function getVisits() {
+  const token = getToken();
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  try {
+    const response = await fetch(`${API_URL}${INTERACTIONS_ENDPOINT}/visits`, {
+      headers,
+    });
+    if (!response.ok) throw new Error("Error al cargar visitas");
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return { success: false, data: [] };
   }
 }

@@ -1,28 +1,20 @@
 .details-container {
-  padding: 20px;
+  padding: 30px;
+  padding-top: 150px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.header-nav {
+.title-row {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.back-btn {
-  margin-right: 15px;
-  padding: 8px 15px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: white;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.back-btn:hover {
-  background-color: #f3f4f6;
+.property-title {
+  margin: 0;
+  line-height: 1.2;
 }
 
 .main-content {
@@ -162,7 +154,7 @@
   border-radius: 12px;
   padding: 25px;
   position: sticky;
-  top: 20px;
+  top: 180px;
   background-color: white;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
@@ -221,11 +213,20 @@
   .main-content {
     grid-template-columns: 1fr;
   }
+
+  .details-container {
+    padding-top: 140px;
+  }
+
+  .sidebar-card {
+    position: relative;
+    top: 0;
+  }
 }
 
 .popup-content {
   width: 90% !important;
-  max-width: 800px !important;
+  max-width: 500px !important;
   padding: 0 !important;
   border: none !important;
   border-radius: 12px !important;
@@ -235,6 +236,36 @@
 .popup-overlay {
   background: rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(2px);
+  z-index: 2000 !important;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  text-align: center;
+  width: 100%;
+}
+
+.modal-container h2,
+.modal-container h3 {
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+}
+
+.modal-container p {
+  width: 100%;
+  text-align: center;
+}
+
+.modal-container button {
+  width: 100%;
+  max-width: 280px;
 }
 
 .modal-map-container {
@@ -268,20 +299,24 @@
 }
 
 .close-map-btn {
-  background: transparent;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
   border: none;
-  font-size: 24px;
+  font-size: 28px;
   line-height: 1;
   color: #666;
   cursor: pointer;
-  padding: 5px;
-  transition: color 0.2s;
+  padding: 5px 10px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  z-index: 1000;
 }
 
 .close-map-btn:hover {
   color: #000;
   background-color: #f3f4f6;
-  border-radius: 50%;
 }
 
 .status-container {
@@ -326,4 +361,54 @@
 
 .btn-view-location {
   margin-top: 10px;
+}
+
+.publisher-info {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.auth-prompt-container {
+  padding: 15px;
+  background-color: #eff6ff;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #bfdbfe;
+}
+
+.auth-prompt-text {
+  font-size: 0.9rem;
+  color: #1e40af;
+  margin-bottom: 10px;
+}
+
+.btn-auth-action {
+  font-size: 0.9rem;
+  padding: 8px 16px;
+}
+
+.owner-message {
+  padding: 10px;
+  background-color: #f3f4f6;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.btn-schedule {
+  margin-top: 10px;
+}
+
+.map-section-wrapper {
+  margin-top: 25px;
+}
+
+.map-section-title {
+  margin-bottom: 10px;
+}
+
+.contact-loading {
+  padding: 20px;
+  text-align: center;
 }

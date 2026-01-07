@@ -8,6 +8,7 @@ import PersonalStep from "./steps/personalStep";
 import AddressStep from "./steps/addressStep";
 import FiscalStep from "./steps/fiscalStep";
 import PreferencesStep from "./steps/preferencesStep";
+import PaymentStep from "./steps/paymentStep";
 import styles from "./account.module.css";
 
 function AccountContent() {
@@ -76,6 +77,12 @@ function AccountContent() {
               Preferencias
             </button>
           )}
+          <button
+            className={activeTab === "metodos" ? styles.tabActive : styles.tab}
+            onClick={() => setActiveTab("metodos")}
+          >
+            Métodos de pago
+          </button>
         </div>
       </div>
 
@@ -84,6 +91,7 @@ function AccountContent() {
         {activeTab === "direccion" && <AddressStep />}
         {activeTab === "fiscal" && <FiscalStep />}
         {activeTab === "preferencias" && <PreferencesStep />}
+        {activeTab === "metodos" && <PaymentStep />}
       </div>
     </div>
   );

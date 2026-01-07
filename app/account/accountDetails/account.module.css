@@ -181,6 +181,12 @@
   color: #666;
 }
 
+.paymentTitle {
+  display: flex;
+  gap: 2vw;
+  align-items: center;
+}
+
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr;

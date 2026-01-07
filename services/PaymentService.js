@@ -44,3 +44,26 @@ export async function payProperty(propertyId, amount, methodId) {
     return { success: false, error: error.message };
   }
 }
+
+export async function saveNewPaymentMethod(paymentType, paymentDetails) {
+  try {
+    const response = await fetch(`${API_URL}${PAYMENT_METHODS_ENDPOINT}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: {
+        tipo: paymentType,
+        datos: paymentDetails,
+        predeterminado: false,
+      },
+    });
+
+    if (!response) return { success: false, error: error.message };
+
+    return await response.json();
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}

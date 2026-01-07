@@ -3,8 +3,10 @@ import Button from "@components/button/Button";
 import { fetchPaymentMethods, payProperty } from "@services/PaymentService";
 import Popup from "reactjs-popup";
 import PaymentReceipt from "../paymentReceipt/PaymentReceipt";
+import { useRouter } from "next/navigation";
 
 export default function BuyOrRent({ close, property }) {
+  const router = useRouter();
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [paymentReceipt, setPaymentReceipt] = useState(null);
   const [paymentMethods, setPaymentMethods] = useState(null);
@@ -51,7 +53,7 @@ export default function BuyOrRent({ close, property }) {
   }
 
   function addPaymentMethod() {
-    //TODO
+    router.push("/propertyDetails/buyOrRent");
   }
 
   useEffect(() => {
@@ -98,7 +100,7 @@ export default function BuyOrRent({ close, property }) {
           }
           onClick={payForProperty}
         />
-        <Popup open={receiptOpen} position="right center" modal nested>
+        <Popup open={receiptOpen} onClose={() => {setReceiptOpen(false)}} position="right center" modal nested>
           <PaymentReceipt receipt={paymentReceipt} />
         </Popup>
         <Button text="Cerrar" onClick={close} type="secondary" />

@@ -64,7 +64,9 @@ export default function PaymentStep() {
     setAlert({ type: "", message: "" });
   }
 
-  async function savePaymentMethod() {
+  async function savePaymentMethod(e) {
+    if (e) e.preventDefault();
+
     setAlert({ type: "", message: "" });
 
     const { isValid, error } = validatePaymentMethodInfo(
@@ -97,13 +99,16 @@ export default function PaymentStep() {
     }
   }
 
-  // ELIMINAMOS "function AddMethodForm() { ... }" DE AQUÍ
-
   return (
     <div>
       <div className={styles.paymentTitle}>
         <h3>Métodos de pago agregados</h3>
-        <Button text="+" onClick={addNewPaymentMethod} type="secondary" />
+        <Button
+          text="+"
+          onClick={addNewPaymentMethod}
+          type="secondary"
+          aria-label="Agregar nuevo método de pago"
+        />
       </div>
 
       <div className={styles.methodsContainer}>
@@ -112,7 +117,10 @@ export default function PaymentStep() {
             <div className={styles.paymentMethod} key={method.idMetodo}>
               <div style={{ flex: 1 }}>
                 <p style={{ fontWeight: "bold", textTransform: "capitalize" }}>
-                  {method.tipo} {method.predeterminado && "⭐"}
+                  {method.tipo}{" "}
+                  {method.predeterminado && (
+                    <span aria-label="Método predeterminado">⭐</span>
+                  )}
                 </p>
                 <p style={{ color: "#666", fontSize: "0.9rem" }}>
                   {method.detalle}
@@ -135,16 +143,24 @@ export default function PaymentStep() {
         }}
         modal
         nested
-        contentStyle={{ padding: "20px", borderRadius: "8px", width: "400px" }}
+        contentStyle={{
+          padding: "20px",
+          borderRadius: "12px",
+          width: "90%",
+          maxWidth: "450px",
+        }}
       >
-        {/* MOVEMOS EL JSX DEL FORMULARIO DIRECTAMENTE AQUÍ */}
-        <div className={styles.modalContent}>
+        <form className={styles.modalContent} onSubmit={savePaymentMethod}>
           <h3 style={{ marginBottom: "1rem" }}>Agregar nueva forma de pago</h3>
 
-          <label style={{ display: "block", marginBottom: "0.5rem" }}>
+          <label
+            htmlFor="payment-type"
+            style={{ display: "block", marginBottom: "0.5rem" }}
+          >
             Tipo de método:
           </label>
           <select
+            id="payment-type"
             className={styles.control}
             style={{ marginBottom: "1rem" }}
             value={selectedPaymentType}
@@ -155,23 +171,30 @@ export default function PaymentStep() {
             <option value="mercadopago">MercadoPago</option>
           </select>
 
-          <label style={{ display: "block", marginBottom: "0.5rem" }}>
+          <label
+            htmlFor="payment-details"
+            style={{ display: "block", marginBottom: "0.5rem" }}
+          >
             {selectedPaymentType === "tarjeta"
               ? "Número de tarjeta"
               : "Correo electrónico"}
           </label>
 
           <input
+            id="payment-details"
             className={styles.control}
             style={{ marginBottom: "1.5rem" }}
-            type={selectedPaymentType === "tarjeta" ? "number" : "email"}
+            type={selectedPaymentType === "tarjeta" ? "text" : "email"}
+            inputMode={selectedPaymentType === "tarjeta" ? "numeric" : "email"}
             value={paymentDetails}
             onChange={handleInputChange}
             placeholder={
               selectedPaymentType === "tarjeta"
-                ? "1234..."
+                ? "0000 0000 0000 0000"
                 : "ejemplo@correo.com"
             }
+            maxLength={selectedPaymentType === "tarjeta" ? 19 : 100}
+            autoComplete="off"
           />
 
           <div
@@ -183,11 +206,12 @@ export default function PaymentStep() {
                 setAddMethodOpen(false);
                 setAlert({ type: "", message: "" });
               }}
-              type="secondary"
+              type="button"
+              className="btnSecondary"
             />
-            <Button text="Guardar" onClick={savePaymentMethod} />
+            <Button text="Guardar" onClick={savePaymentMethod} type="submit" />
           </div>
-        </div>
+        </form>
       </Popup>
     </div>
   );

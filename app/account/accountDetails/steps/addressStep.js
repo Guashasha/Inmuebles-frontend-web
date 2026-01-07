@@ -17,6 +17,7 @@ export default function AddressStep() {
     ciudad: "",
     estado: "",
   });
+
   const loadDataFromProfile = () => {
     if (profile && profile.Direccion) {
       setFormData({
@@ -63,7 +64,9 @@ export default function AddressStep() {
     setIsEditing(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (e) => {
+    if (e) e.preventDefault();
+
     setAlert({ type: "", message: "" });
     const success = await saveChanges({
       direccion: {
@@ -82,16 +85,19 @@ export default function AddressStep() {
   };
 
   return (
-    <div className={styles.stepContainer}>
+    <form className={styles.stepContainer} onSubmit={handleSave}>
       <div className={styles.grid}>
         <div className={styles.inputGroup}>
-          <label>Estado</label>
+          <label htmlFor="select-estado">Estado</label>
           <select
+            id="select-estado"
             name="estado"
             value={formData.estado || ""}
             onChange={handleChange}
             disabled={!isEditing}
             className={styles.input}
+            autoComplete="address-level1"
+            aria-required="true"
           >
             <option value="">Selecciona un estado</option>
             {LOCATIONS.map((l) => (
@@ -103,13 +109,16 @@ export default function AddressStep() {
         </div>
 
         <div className={styles.inputGroup}>
-          <label>Ciudad</label>
+          <label htmlFor="select-ciudad">Ciudad</label>
           <select
+            id="select-ciudad"
             name="ciudad"
             value={formData.ciudad || ""}
             onChange={handleChange}
             disabled={!isEditing || !formData.estado}
             className={styles.input}
+            autoComplete="address-level2"
+            aria-required="true"
           >
             <option value="">Selecciona una ciudad</option>
             {availableCities.map((c) => (
@@ -123,6 +132,7 @@ export default function AddressStep() {
 
       <div className={styles.actions}>
         <button
+          type="button"
           className={styles.backButton}
           onClick={() => router.push("/account/changePassword")}
         >
@@ -131,19 +141,27 @@ export default function AddressStep() {
 
         {isEditing ? (
           <div className={styles.editActions}>
-            <button onClick={handleCancel} className={styles.btnCancel}>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className={styles.btnCancel}
+            >
               Cancelar
             </button>
-            <button onClick={handleSave} className={styles.btnSave}>
+            <button type="submit" className={styles.btnSave}>
               Guardar
             </button>
           </div>
         ) : (
-          <button onClick={() => setIsEditing(true)} className={styles.btnEdit}>
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className={styles.btnEdit}
+          >
             Editar
           </button>
         )}
       </div>
-    </div>
+    </form>
   );
 }

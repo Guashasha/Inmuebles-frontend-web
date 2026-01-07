@@ -10,10 +10,16 @@ import { validatePassword } from "@validators";
 import styles from "./changePassword.module.css";
 
 const EyeIcon = ({ visible, onClick }) => (
-  <button type="button" onClick={onClick} className={styles.eyeButton}>
+  <button
+    type="button"
+    onClick={onClick}
+    className={styles.eyeButton}
+    aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
+  >
     <Image
       src={visible ? "/icons/eye.svg" : "/icons/eye-off.svg"}
-      alt={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
+      alt=""
+      aria-hidden="true"
       width={20}
       height={20}
     />
@@ -109,7 +115,7 @@ export default function ChangePassword() {
   };
 
   return (
-    <div className={styles.container}>
+    <main className={styles.container}>
       <div className={styles.header}>
         <div className={styles.backBtnWrapper}>
           <ReturnButton onClick={handleReturn} />
@@ -128,9 +134,12 @@ export default function ChangePassword() {
       <div className={styles.content}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.section}>
-            <label className={styles.label}>Ingresa tu contraseña actual</label>
+            <label htmlFor="current-pass" className={styles.label}>
+              Ingresa tu contraseña actual
+            </label>
             <div className={styles.inputWrapper}>
               <input
+                id="current-pass"
                 type={showCurrent ? "text" : "password"}
                 name="currentPassword"
                 value={formData.currentPassword}
@@ -140,6 +149,8 @@ export default function ChangePassword() {
                   errors.currentPassword ? styles.inputError : ""
                 }`}
                 disabled={loading}
+                autoComplete="current-password"
+                aria-invalid={!!errors.currentPassword}
               />
               <EyeIcon
                 visible={showCurrent}
@@ -152,13 +163,14 @@ export default function ChangePassword() {
 
           <div className={styles.bottomGrid}>
             <div className={styles.leftColumn}>
-              <label className={styles.label}>
+              <label htmlFor="new-pass" className={styles.label}>
                 Ingresa tu contraseña nueva
               </label>
 
               <div className={styles.inputGroup}>
                 <div className={styles.inputWrapper}>
                   <input
+                    id="new-pass"
                     type={showNew ? "text" : "password"}
                     name="newPassword"
                     value={formData.newPassword}
@@ -168,6 +180,8 @@ export default function ChangePassword() {
                       errors.newPassword ? styles.inputError : ""
                     }`}
                     disabled={loading}
+                    autoComplete="new-password"
+                    aria-invalid={!!errors.newPassword}
                   />
                   <EyeIcon
                     visible={showNew}
@@ -188,6 +202,9 @@ export default function ChangePassword() {
                       errors.confirmPassword ? styles.inputError : ""
                     }`}
                     disabled={loading}
+                    autoComplete="new-password"
+                    aria-invalid={!!errors.confirmPassword}
+                    aria-label="Confirmar nueva contraseña"
                   />
                   <EyeIcon
                     visible={showConfirm}
@@ -222,6 +239,6 @@ export default function ChangePassword() {
           </div>
         </form>
       </div>
-    </div>
+    </main>
   );
 }

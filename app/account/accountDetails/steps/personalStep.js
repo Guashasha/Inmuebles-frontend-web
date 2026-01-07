@@ -56,7 +56,9 @@ export default function PersonalStep() {
     setIsEditing(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (e) => {
+    if (e) e.preventDefault();
+
     setAlert({ type: "", message: "" });
     const { isValid, errors: validationErrors } =
       validatePersonalData(formData);
@@ -88,11 +90,12 @@ export default function PersonalStep() {
   };
 
   return (
-    <div className={styles.stepContainer}>
+    <form className={styles.stepContainer} onSubmit={handleSave}>
       <div className={styles.grid}>
         <div className={styles.inputGroup}>
-          <label>Nombre (s)</label>
+          <label htmlFor="input-nombre">Nombre (s)</label>
           <input
+            id="input-nombre"
             name="nombre"
             value={formData.nombre || ""}
             onChange={handleChange}
@@ -100,11 +103,15 @@ export default function PersonalStep() {
             className={`${styles.input} ${
               errors.nombre ? styles.inputError : ""
             }`}
+            autoComplete="given-name"
+            aria-invalid={!!errors.nombre}
           />
         </div>
+
         <div className={styles.inputGroup}>
-          <label>Apellidos</label>
+          <label htmlFor="input-apellidos">Apellidos</label>
           <input
+            id="input-apellidos"
             name="apellidos"
             value={formData.apellidos || ""}
             onChange={handleChange}
@@ -112,21 +119,26 @@ export default function PersonalStep() {
             className={`${styles.input} ${
               errors.apellidos ? styles.inputError : ""
             }`}
+            autoComplete="family-name"
+            aria-invalid={!!errors.apellidos}
           />
         </div>
 
         <div className={styles.inputGroup}>
-          <label>Correo electrónico</label>
+          <label htmlFor="input-email">Correo electrónico</label>
           <input
+            id="input-email"
             value={formData.email || ""}
             disabled
             className={`${styles.input} ${styles.disabled}`}
+            autoComplete="email"
           />
         </div>
 
         <div className={styles.inputGroup}>
-          <label>Teléfono celular</label>
+          <label htmlFor="input-telefono">Teléfono celular</label>
           <input
+            id="input-telefono"
             name="telefono"
             value={formData.telefono || ""}
             onChange={handleChange}
@@ -134,12 +146,15 @@ export default function PersonalStep() {
             className={`${styles.input} ${
               errors.telefono ? styles.inputError : ""
             }`}
+            autoComplete="tel"
+            aria-invalid={!!errors.telefono}
           />
         </div>
 
         <div className={styles.inputGroup}>
-          <label>Nacionalidad</label>
+          <label htmlFor="input-nacionalidad">Nacionalidad</label>
           <input
+            id="input-nacionalidad"
             name="nacionalidad"
             value={formData.nacionalidad || ""}
             onChange={handleChange}
@@ -147,12 +162,15 @@ export default function PersonalStep() {
             className={`${styles.input} ${
               errors.nacionalidad ? styles.inputError : ""
             }`}
+            autoComplete="country-name"
+            aria-invalid={!!errors.nacionalidad}
           />
         </div>
 
         <div className={styles.inputGroup}>
-          <label>Fecha de nacimiento</label>
+          <label htmlFor="input-fecha">Fecha de nacimiento</label>
           <input
+            id="input-fecha"
             type="date"
             name="fechaNacimiento"
             value={formData.fechaNacimiento || ""}
@@ -161,12 +179,15 @@ export default function PersonalStep() {
             className={`${styles.input} ${
               errors.fechaNacimiento ? styles.inputError : ""
             }`}
+            autoComplete="bday"
+            aria-invalid={!!errors.fechaNacimiento}
           />
         </div>
       </div>
 
       <div className={styles.actions}>
         <button
+          type="button"
           className={styles.backButton}
           onClick={() => router.push("/account/changePassword")}
         >
@@ -175,19 +196,27 @@ export default function PersonalStep() {
 
         {isEditing ? (
           <div className={styles.editActions}>
-            <button onClick={handleCancel} className={styles.btnCancel}>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className={styles.btnCancel}
+            >
               Cancelar
             </button>
-            <button onClick={handleSave} className={styles.btnSave}>
+            <button type="submit" className={styles.btnSave}>
               Guardar
             </button>
           </div>
         ) : (
-          <button onClick={() => setIsEditing(true)} className={styles.btnEdit}>
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className={styles.btnEdit}
+          >
             Editar
           </button>
         )}
       </div>
-    </div>
+    </form>
   );
 }

@@ -1,15 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { fetchPaymentMethods, saveNewPaymentMethod } from "@services/PaymentService";
+import {
+  fetchPaymentMethods,
+  saveNewPaymentMethod,
+} from "@services/PaymentService";
+import { useAccount } from "@context/AccountContext";
+import { validatePaymentMethodInfo } from "@validators";
 import styles from "../account.module.css";
 import Button from "@components/button/Button";
 import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
 
-export default function PersonalStep() {
+export default function PaymentStep() {
   const router = useRouter();
+  const { setAlert } = useAccount();
   const [addMethodOpen, setAddMethodOpen] = useState(false);
-  const [paymentMethods, setPaymentMethods] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPaymentType, setSelectedPaymentType] = useState("paypal");
   const [paymentDetails, setPaymentDetails] = useState("");
 
@@ -17,83 +24,80 @@ export default function PersonalStep() {
     getPaymentMethods();
   }, []);
 
-  function getPaymentMethods() {
-    const response = fetchPaymentMethods();
-    if (!response.success) {
-      alert(
-        "Ocurrió un error al recuperar los métodos de pago, intente de nuevo."
-      );
-      return;
-    }
+  async function getPaymentMethods() {
+    try {
+      setAlert({ type: "", message: "" });
+      const response = await fetchPaymentMethods();
 
-    setPaymentMethods(response.data);
+      if (response.success === false) {
+        setAlert({
+          type: "error",
+          message: "Error al cargar métodos: " + response.error,
+        });
+        return;
+      }
+
+      if (response.data) {
+        setPaymentMethods(response.data);
+      }
+    } catch (error) {
+      console.error("Error al cargar métodos:", error);
+      setAlert({ type: "error", message: "Ocurrió un error inesperado." });
+    }
   }
 
   function addNewPaymentMethod() {
+    setPaymentDetails("");
+    setSelectedPaymentType("paypal");
+    setAlert({ type: "", message: "" });
     setAddMethodOpen(true);
   }
 
-  function handlePaymentMethodSelection(value) {
-    setSelectedPaymentType(value);
+  function handlePaymentMethodSelection(e) {
+    setSelectedPaymentType(e.target.value);
+    setPaymentDetails("");
+    setAlert({ type: "", message: "" });
   }
 
-  function handleInputChange(value) {
-    setPaymentDetails(value.target.value);
+  function handleInputChange(e) {
+    setPaymentDetails(e.target.value);
+    setAlert({ type: "", message: "" });
   }
 
-  function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+  async function savePaymentMethod() {
+    setAlert({ type: "", message: "" });
 
-  function validateCard(card) {
-    const cardRegex = /^\d{16}$/;
-    return cardRegex.test(card);
-  }
+    const { isValid, error } = validatePaymentMethodInfo(
+      selectedPaymentType,
+      paymentDetails
+    );
 
-  function savePaymentMethod() {
-    if (!selectedPaymentType) return;
-    if (paymentDetails === "") {
-      alert("Ingresa los detalles del método de pago");
+    if (!isValid) {
+      setAlert({ type: "error", message: error });
       return;
     }
 
-    switch (selectedPaymentType) {
-      case "paypal":
-      case "mercadopago":
-        if (!validateEmail(paymentDetails)) alert("Ingrese un correo válido");
-        return;
-      case "tarjeta":
-        if (!validateCard(paymentDetails)) alert("Ingrese un número de tarjeta válido");
-        return;
-    }
-
-    saveNewPaymentMethod(selectedPaymentType, paymentDetails);
-  }
-
-  function AddMethodForm() {
-    return (
-      <div>
-        <h3>Agregar nueva forma de pago</h3>
-        <label>Tipo</label>
-        <select onChange={(e) => handlePaymentMethodSelection(e)}>
-          <option value="paypal" selected>
-            Paypal
-          </option>
-          <option value="tarjeta">Tarjeta</option>
-          <option value="mercadopago">mercadopago</option>
-        </select>
-        <label>
-          {selectedPaymentType === "paypal" ||
-          selectedPaymentType === "mercadopago"
-            ? "Correo electrónico"
-            : "Número de tarjeta"}
-        </label>
-        <input type="text" onChange={(e) => handleInputChange(e)} />
-        <Button text="Guardar" onClick={savePaymentMethod} />
-      </div>
+    const response = await saveNewPaymentMethod(
+      selectedPaymentType,
+      paymentDetails
     );
+
+    if (response.success === false) {
+      setAlert({
+        type: "error",
+        message: response.error || "No se pudo guardar el método de pago.",
+      });
+    } else {
+      setAlert({
+        type: "success",
+        message: "Método de pago agregado correctamente.",
+      });
+      setAddMethodOpen(false);
+      getPaymentMethods();
+    }
   }
+
+  // ELIMINAMOS "function AddMethodForm() { ... }" DE AQUÍ
 
   return (
     <div>
@@ -102,27 +106,88 @@ export default function PersonalStep() {
         <Button text="+" onClick={addNewPaymentMethod} type="secondary" />
       </div>
 
-      {paymentMethods ? (
-        paymentMethods.map((method) => {
-          <div className={styles.paymentMethod}>
-            <p>{method.tipo}</p>
-            <p>{method.detalle}</p>
-          </div>;
-        })
-      ) : (
-        <p>Agrega un método de pago con el botón "+"</p>
-      )}
+      <div className={styles.methodsContainer}>
+        {paymentMethods && paymentMethods.length > 0 ? (
+          paymentMethods.map((method) => (
+            <div className={styles.paymentMethod} key={method.idMetodo}>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontWeight: "bold", textTransform: "capitalize" }}>
+                  {method.tipo} {method.predeterminado && "⭐"}
+                </p>
+                <p style={{ color: "#666", fontSize: "0.9rem" }}>
+                  {method.detalle}
+                </p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p style={{ fontStyle: "italic", color: "#888" }}>
+            No tienes métodos guardados. Agrega uno con el botón "+".
+          </p>
+        )}
+      </div>
 
       <Popup
         open={addMethodOpen}
         onClose={() => {
           setAddMethodOpen(false);
+          setAlert({ type: "", message: "" });
         }}
-        position="right center"
         modal
         nested
+        contentStyle={{ padding: "20px", borderRadius: "8px", width: "400px" }}
       >
-        <AddMethodForm />
+        {/* MOVEMOS EL JSX DEL FORMULARIO DIRECTAMENTE AQUÍ */}
+        <div className={styles.modalContent}>
+          <h3 style={{ marginBottom: "1rem" }}>Agregar nueva forma de pago</h3>
+
+          <label style={{ display: "block", marginBottom: "0.5rem" }}>
+            Tipo de método:
+          </label>
+          <select
+            className={styles.control}
+            style={{ marginBottom: "1rem" }}
+            value={selectedPaymentType}
+            onChange={handlePaymentMethodSelection}
+          >
+            <option value="paypal">PayPal</option>
+            <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+            <option value="mercadopago">MercadoPago</option>
+          </select>
+
+          <label style={{ display: "block", marginBottom: "0.5rem" }}>
+            {selectedPaymentType === "tarjeta"
+              ? "Número de tarjeta"
+              : "Correo electrónico"}
+          </label>
+
+          <input
+            className={styles.control}
+            style={{ marginBottom: "1.5rem" }}
+            type={selectedPaymentType === "tarjeta" ? "number" : "email"}
+            value={paymentDetails}
+            onChange={handleInputChange}
+            placeholder={
+              selectedPaymentType === "tarjeta"
+                ? "1234..."
+                : "ejemplo@correo.com"
+            }
+          />
+
+          <div
+            style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
+          >
+            <Button
+              text="Cancelar"
+              onClick={() => {
+                setAddMethodOpen(false);
+                setAlert({ type: "", message: "" });
+              }}
+              type="secondary"
+            />
+            <Button text="Guardar" onClick={savePaymentMethod} />
+          </div>
+        </div>
       </Popup>
     </div>
   );

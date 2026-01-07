@@ -17,6 +17,7 @@ import dynamic from "next/dynamic";
 import Alert from "@components/alert/Alert";
 import ReturnButton from "@components/returnButton/ReturnButton";
 import { useUser } from "@context/UserContext";
+import BuyOrRent from "./buyOrRent/BuyOrRent";
 
 const MapPicker = dynamic(() => import("@map/MapPicker"), {
   ssr: false,
@@ -310,9 +311,17 @@ export default function PropertyDetails() {
                     )}
                   </Popup>
 
-                  <button className="btn-primary">
-                    {isVenta ? "Comprar" : "Rentar"}
-                  </button>
+                  <Popup
+                    trigger={
+                      <button className="btn-primary">
+                        {isVenta ? "Comprar" : "Rentar"}
+                      </button>
+                    }
+                    modal
+                    nested
+                  >
+                    {(close) => <BuyOrRent close={close} property={property} />}
+                  </Popup>
                 </>
               )}
 

@@ -1,0 +1,79 @@
+.container {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.label {
+  font-weight: 500;
+  color: #666;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.value {
+  font-weight: 600;
+  color: #333;
+}
+
+.price {
+  font-weight: 700;
+  color: #000;
+  font-size: 1.1rem;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
+
+.inputGroup {
+  margin-bottom: 25px;
+}
+
+.control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.control:focus {
+  border-color: #000;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.emptyState {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666;
+}

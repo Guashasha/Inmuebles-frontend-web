@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import AccountService from "@/services/AccountService";
+import AccountService from "@services/AccountService";
 import Alert from "@components/alert/Alert";
+import ReturnButton from "@components/returnButton/ReturnButton";
 import { validatePassword } from "@validators";
 import styles from "./changePassword.module.css";
 
@@ -24,14 +25,21 @@ export default function ChangePassword() {
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ type: "", message: "" });
   const [errors, setErrors] = useState({});
+
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleReturn = () => {
+    router.back();
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (errors[e.target.name]) {
@@ -87,6 +95,7 @@ export default function ChangePassword() {
           confirmPassword: "",
         });
         setTimeout(() => router.push("/account/accountDetails"), 2000);
+      } else {
         setAlert({
           type: "error",
           message: result.message || result.error || "Error al actualizar.",
@@ -102,6 +111,9 @@ export default function ChangePassword() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
+        <div className={styles.backBtnWrapper}>
+          <ReturnButton onClick={handleReturn} />
+        </div>
         <h1 className={styles.title}>Cambiar contraseña</h1>
       </div>
 

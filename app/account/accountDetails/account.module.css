@@ -21,6 +21,20 @@
   line-height: 1;
 }
 
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 20px;
+}
+
+.backBtnWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .title {
   font-size: 2rem;
   font-weight: 700;

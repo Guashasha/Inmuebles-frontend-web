@@ -1,5 +1,6 @@
 .mainContainer {
   margin: auto;
+  margin-top: 30px;
   justify-content: center;
   align-items: center;
   width: 80vw;

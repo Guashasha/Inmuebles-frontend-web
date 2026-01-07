@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import AuthService from "@/services/AuthService";
+import AuthService from "@services/AuthService";
 import Alert from "@components/alert/Alert";
 import styles from "./login.module.css";
 

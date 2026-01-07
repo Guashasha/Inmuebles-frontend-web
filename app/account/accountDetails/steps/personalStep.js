@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAccount } from "@context/AccountContext";
 import { validatePersonalData } from "@validators";
+import { useUser } from "@context/UserContext";
 import styles from "../account.module.css";
 
 export default function PersonalStep() {
@@ -10,6 +11,7 @@ export default function PersonalStep() {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState({});
+  const { updateUser } = useUser();
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -78,6 +80,10 @@ export default function PersonalStep() {
     if (success) {
       setIsEditing(false);
       setErrors({});
+      updateUser({
+        nombre: formData.nombre,
+        apellidos: formData.apellidos,
+      });
     }
   };
 

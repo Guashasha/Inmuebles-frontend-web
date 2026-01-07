@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import AuthService from "@/services/AuthService";
+import AuthService from "@services/AuthService";
 import Alert from "@components/alert/Alert";
 import styles from "./recovery.module.css";
 

@@ -174,36 +174,16 @@ export default function HomePage() {
             ))}
 
             {properties.length === 0 && (
-              <div
-                style={{
-                  width: "100%",
-                  minHeight: "200px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#666",
-                  padding: "40px",
-                  gridColumn: "1 / -1",
-                }}
-              >
+              <div className="noResultsContainer">
                 <p style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
                   No se encontraron propiedades con estos filtros.
                 </p>
                 <button
+                  className="clearFiltersBtn"
                   onClick={() => {
                     setSearchQuery("");
                     setSelectedCategories([]);
                     loadDefaultProperties();
-                  }}
-                  style={{
-                    marginTop: "10px",
-                    textDecoration: "underline",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#3b82f6",
-                    fontSize: "1rem",
                   }}
                 >
                   Limpiar filtros

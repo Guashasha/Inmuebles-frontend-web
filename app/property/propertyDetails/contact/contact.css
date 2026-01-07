@@ -2,7 +2,12 @@
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  min-width: 300px;
+  width: 100%;
+  max-width: 400px;
+  min-width: 280px;
+  box-sizing: border-box;
+  background-color: white;
+  margin: 0 auto;
 }
 
 .popup h3 {
@@ -30,9 +35,28 @@
   color: #1f2937;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .popup button {
   margin-top: 1.5rem;
   width: 100%;
+}
+
+@media (max-width: 480px) {
+  .popup {
+    padding: 1rem;
+    min-width: unset;
+    width: 90vw;
+  }
+
+  .popup h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .popup p:not(.section-tag) {
+    font-size: 1rem;
+  }
 }

@@ -13,9 +13,7 @@ export default function Contact({ landlord, onButtonClick }) {
       <p>{landlord.telefono || "No disponible"}</p>
 
       <p className="section-tag">Correo electrónico</p>
-      <p style={{ wordBreak: "break-all" }}>
-        {landlord.correo || "No disponible"}
-      </p>
+      <p>{landlord.correo || "No disponible"}</p>
 
       <Button onClick={onButtonClick} text="Cerrar" />
     </div>

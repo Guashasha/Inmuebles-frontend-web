@@ -1,26 +1,132 @@
 .mainContainer {
-  margin: auto;
+  margin: 0 auto;
   margin-top: 30px;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   width: 80vw;
+  max-width: 1400px;
   padding-top: 10vh;
+  padding-bottom: 60px;
+}
+
+.searchControls {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.componentTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .categoriesContainer {
   display: flex;
-  vertical-align: center;
   align-items: center;
-  gap: 1.5vw;
-  margin: 1vh 0;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 20px 0;
 }
 
-.searchControls {
-  margin: 0 0 4vh 0;
+.categoriesContainer p {
+  margin: 0;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
 }
 
 .propertiesGrid {
   display: grid;
-  gap: 2vw;
+  width: 100%;
+  gap: 25px;
   grid-template-columns: repeat(3, 1fr);
+}
+
+.loadingContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 1024px) {
+  .mainContainer {
+    width: 90vw;
+    padding-top: 5vh;
+  }
+
+  .propertiesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContainer {
+    width: 94vw;
+    padding-top: 50px;
+    margin-top: 15px;
+  }
+
+  .componentTitle {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .searchControls {
+    margin-bottom: 25px;
+  }
+
+  .categoriesContainer {
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .categoriesContainer p {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  .propertiesGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .noResultsContainer {
+    padding: 20px 10px;
+    min-height: 150px;
+  }
+
+  .noResultsContainer p {
+    font-size: 1rem;
+  }
+}
+
+.noResultsContainer {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  padding: 40px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.clearFiltersBtn {
+  margin-top: 10px;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #3b82f6;
+  font-size: 1rem;
 }

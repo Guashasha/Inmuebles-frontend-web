@@ -14,7 +14,6 @@ export default function TopBar() {
 
   const handleMenuClick = (action, close) => {
     close();
-
     switch (action) {
       case "account":
         router.push("/account/accountDetails");
@@ -72,7 +71,7 @@ export default function TopBar() {
 
   return (
     <nav className="topBar">
-      <div style={{ flex: 1 }} />
+      <div className="layout-spacer" />
       <div className="logoContainer">
         <Image
           alt="Inmuebles a tu alcance"
@@ -83,9 +82,9 @@ export default function TopBar() {
         />
       </div>
 
-      <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+      <div className="layout-right">
         {loadingUser ? (
-          <div className="loader">Cargando...</div>
+          <div className="loader">...</div>
         ) : isAuthenticated ? (
           <Popup
             trigger={
@@ -102,9 +101,6 @@ export default function TopBar() {
             contentStyle={{
               padding: "0px",
               border: "none",
-              borderRadius: "8px",
-              width: "200px",
-              marginTop: "10px",
               borderRadius: "12px",
               width: "220px",
               zIndex: "9999",

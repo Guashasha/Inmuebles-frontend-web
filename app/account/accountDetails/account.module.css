@@ -37,11 +37,13 @@
 .tabsContainer {
   border-bottom: 1px solid #eee;
   margin-bottom: 30px;
+  width: 100%;
 }
 
 .tabs {
   display: flex;
   gap: 30px;
+  flex-wrap: wrap;
 }
 
 .tab,
@@ -53,6 +55,7 @@
   cursor: pointer;
   color: #888;
   position: relative;
+  white-space: nowrap;
 }
 
 .tabActive {
@@ -123,7 +126,6 @@
   background-color: #f5f5f5;
 }
 
-/* --- BOTONES --- */
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -148,6 +150,9 @@
   font-size: 0.9rem;
   font-weight: 500;
   transition: background-color 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btnEdit:hover,
@@ -280,23 +285,6 @@
   color: #666;
 }
 
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  .actions {
-    flex-direction: column-reverse;
-    align-items: stretch;
-  }
-  .btnSecondary {
-    margin-right: 0;
-    text-align: center;
-  }
-  .paymentTitle {
-    flex-direction: row;
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -308,6 +296,7 @@
   }
 }
 
+/* Reseteo inputs */
 .input::-webkit-outer-spin-button,
 .input::-webkit-inner-spin-button,
 .control::-webkit-outer-spin-button,
@@ -319,4 +308,71 @@
 .input[type="number"],
 .control[type="number"] {
   -moz-appearance: textfield;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .headerRow {
+    gap: 0.5rem;
+  }
+
+  .tabsContainer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .tabsContainer::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabs {
+    width: max-content;
+    flex-wrap: nowrap;
+    gap: 20px;
+    padding-bottom: 5px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .btnEdit,
+  .btnSave,
+  .btnCancel,
+  .backButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .btnSecondary {
+    margin-right: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .paymentTitle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .paymentTitle button {
+    align-self: flex-end;
+  }
 }

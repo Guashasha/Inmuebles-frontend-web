@@ -49,7 +49,9 @@ export default function PreferencesStep() {
     setIsEditing(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (e) => {
+    if (e) e.preventDefault();
+
     setAlert({ type: "", message: "" });
 
     const success = await saveChanges({
@@ -69,35 +71,42 @@ export default function PreferencesStep() {
   };
 
   return (
-    <div className={styles.stepContainer}>
+    <form className={styles.stepContainer} onSubmit={handleSave}>
       <div className={styles.grid}>
         <div className={styles.inputGroup}>
-          <label>Presupuesto mínimo</label>
+          <label htmlFor="min-price">Presupuesto mínimo</label>
           <input
+            id="min-price"
             type="number"
             name="presupuestoMin"
             value={formData.presupuestoMin || ""}
             onChange={handleChange}
             disabled={!isEditing}
             className={styles.input}
+            placeholder="0"
+            min="0"
           />
         </div>
 
         <div className={styles.inputGroup}>
-          <label>Presupuesto máximo</label>
+          <label htmlFor="max-price">Presupuesto máximo</label>
           <input
+            id="max-price"
             type="number"
             name="presupuestoMax"
             value={formData.presupuestoMax || ""}
             onChange={handleChange}
             disabled={!isEditing}
             className={styles.input}
+            placeholder="Sin límite"
+            min="0"
           />
         </div>
 
-        <div className={styles.inputGroup} style={{ gridColumn: "span 2" }}>
-          <label>Categoría</label>
+        <div className={styles.inputGroup}>
+          <label htmlFor="category-select">Categoría de interés</label>
           <select
+            id="category-select"
             name="idCategoria"
             value={formData.idCategoria || ""}
             onChange={handleChange}
@@ -115,6 +124,7 @@ export default function PreferencesStep() {
 
       <div className={styles.actions}>
         <button
+          type="button"
           className={styles.backButton}
           onClick={() => router.push("/account/changePassword")}
         >
@@ -123,19 +133,27 @@ export default function PreferencesStep() {
 
         {isEditing ? (
           <div className={styles.editActions}>
-            <button onClick={handleCancel} className={styles.btnCancel}>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className={styles.btnCancel}
+            >
               Cancelar
             </button>
-            <button onClick={handleSave} className={styles.btnSave}>
+            <button type="submit" className={styles.btnSave}>
               Guardar
             </button>
           </div>
         ) : (
-          <button onClick={() => setIsEditing(true)} className={styles.btnEdit}>
+          <button
+            type="button"
+            onClick={() => setIsEditing(true)}
+            className={styles.btnEdit}
+          >
             Editar
           </button>
         )}
       </div>
-    </div>
+    </form>
   );
 }

@@ -22,14 +22,14 @@ function AccountContent() {
 
   if (loading) {
     return (
-      <div className={styles.loadingContainer}>
+      <div className={styles.loadingContainer} aria-live="polite">
         <p>Cargando información de tu cuenta...</p>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <main className={styles.container}>
       <div className={styles.headerRow}>
         <div className={styles.backBtnWrapper}>
           <ReturnButton onClick={handleReturn} />
@@ -37,7 +37,7 @@ function AccountContent() {
         <h1 className={styles.title}>Mi cuenta</h1>
       </div>
 
-      <div className={styles.alertContainer}>
+      <div className={styles.alertContainer} aria-live="assertive">
         <Alert
           type={alert.type}
           message={alert.message}
@@ -46,54 +46,92 @@ function AccountContent() {
       </div>
 
       <div className={styles.tabsContainer}>
-        <div className={styles.tabs}>
+        <div
+          className={styles.tabs}
+          role="tablist"
+          aria-label="Secciones de la cuenta"
+        >
           <button
+            role="tab"
+            id="tab-personal"
+            aria-selected={activeTab === "personal"}
+            aria-controls="panel-content"
             className={activeTab === "personal" ? styles.tabActive : styles.tab}
             onClick={() => setActiveTab("personal")}
+            tabIndex={activeTab === "personal" ? 0 : -1}
           >
             Información Personal
           </button>
+
           <button
+            role="tab"
+            id="tab-direccion"
+            aria-selected={activeTab === "direccion"}
+            aria-controls="panel-content"
             className={
               activeTab === "direccion" ? styles.tabActive : styles.tab
             }
             onClick={() => setActiveTab("direccion")}
+            tabIndex={activeTab === "direccion" ? 0 : -1}
           >
             Dirección
           </button>
+
           <button
+            role="tab"
+            id="tab-fiscal"
+            aria-selected={activeTab === "fiscal"}
+            aria-controls="panel-content"
             className={activeTab === "fiscal" ? styles.tabActive : styles.tab}
             onClick={() => setActiveTab("fiscal")}
+            tabIndex={activeTab === "fiscal" ? 0 : -1}
           >
             Datos fiscales
           </button>
+
           {profile?.rol === "Cliente" && (
             <button
+              role="tab"
+              id="tab-preferencias"
+              aria-selected={activeTab === "preferencias"}
+              aria-controls="panel-content"
               className={
                 activeTab === "preferencias" ? styles.tabActive : styles.tab
               }
               onClick={() => setActiveTab("preferencias")}
+              tabIndex={activeTab === "preferencias" ? 0 : -1}
             >
               Preferencias
             </button>
           )}
+
           <button
+            role="tab"
+            id="tab-metodos"
+            aria-selected={activeTab === "metodos"}
+            aria-controls="panel-content"
             className={activeTab === "metodos" ? styles.tabActive : styles.tab}
             onClick={() => setActiveTab("metodos")}
+            tabIndex={activeTab === "metodos" ? 0 : -1}
           >
             Métodos de pago
           </button>
         </div>
       </div>
 
-      <div className={styles.contentArea}>
+      <section
+        id="panel-content"
+        role="tabpanel"
+        aria-labelledby={`tab-${activeTab}`}
+        className={styles.contentArea}
+      >
         {activeTab === "personal" && <PersonalStep />}
         {activeTab === "direccion" && <AddressStep />}
         {activeTab === "fiscal" && <FiscalStep />}
         {activeTab === "preferencias" && <PreferencesStep />}
         {activeTab === "metodos" && <PaymentStep />}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
 

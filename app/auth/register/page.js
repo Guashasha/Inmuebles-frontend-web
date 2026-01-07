@@ -10,6 +10,23 @@ import Alert from "@components/alert/Alert";
 import { validateRegisterData } from "@validators";
 import styles from "./register.module.css";
 
+const EyeIcon = ({ visible, onClick, label }) => (
+  <button
+    type="button"
+    className={styles.eyeButton}
+    onClick={onClick}
+    aria-label={label}
+  >
+    <Image
+      src={visible ? "/icons/eye.svg" : "/icons/eye-off.svg"}
+      alt=""
+      aria-hidden="true"
+      width={20}
+      height={20}
+    />
+  </button>
+);
+
 export default function Register() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -64,7 +81,7 @@ export default function Register() {
   };
 
   const handleNextStep = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setAlert({ type: "", message: "" });
     const { isValid, errors } = validateRegisterData(formData);
 
@@ -76,7 +93,8 @@ export default function Register() {
     setStep(2);
   };
 
-  const handleFinalSubmit = async () => {
+  const handleFinalSubmit = async (e) => {
+    if (e) e.preventDefault();
     setLoading(true);
     setAlert({ type: "", message: "" });
     try {
@@ -124,7 +142,7 @@ export default function Register() {
   };
 
   const renderStepOne = () => (
-    <div className={styles.container}>
+    <main className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>Crear cuenta</h1>
         <p className={styles.subtitle}>
@@ -133,8 +151,8 @@ export default function Register() {
       </div>
 
       <form onSubmit={handleNextStep} className={styles.form}>
-        <div className={styles.alertContainer}>
-          {step === 1 && (
+        <div className={styles.alertContainer} aria-live="polite">
+          {step === 1 && alert.message && (
             <Alert
               type={alert.type}
               message={alert.message}
@@ -146,72 +164,91 @@ export default function Register() {
         <div className={styles.formGrid}>
           <div className={styles.column}>
             <div className={styles.inputGroup}>
-              <label>Nombre(s)</label>
+              <label htmlFor="reg-nombre">Nombre(s)</label>
               <input
+                id="reg-nombre"
                 type="text"
                 name="nombre"
                 placeholder="Ej. Juan"
                 value={formData.nombre}
                 onChange={handleChange}
+                autoComplete="given-name"
+                required
               />
             </div>
             <div className={styles.inputGroup}>
-              <label>Apellidos</label>
+              <label htmlFor="reg-apellidos">Apellidos</label>
               <input
+                id="reg-apellidos"
                 type="text"
                 name="apellidos"
                 placeholder="Ej. Pérez"
                 value={formData.apellidos}
                 onChange={handleChange}
+                autoComplete="family-name"
+                required
               />
             </div>
             <div className={styles.inputGroup}>
-              <label>Correo electrónico</label>
+              <label htmlFor="reg-email">Correo electrónico</label>
               <input
+                id="reg-email"
                 type="email"
                 name="email"
                 placeholder="correo@ejemplo.com"
                 value={formData.email}
                 onChange={handleChange}
+                autoComplete="email"
+                required
               />
             </div>
             <div className={styles.inputGroup}>
-              <label>Teléfono</label>
+              <label htmlFor="reg-telefono">Teléfono</label>
               <input
+                id="reg-telefono"
                 type="tel"
                 name="telefono"
                 placeholder="10 dígitos"
                 value={formData.telefono}
                 onChange={handleChange}
+                autoComplete="tel"
+                required
               />
             </div>
             <div className={styles.inputGroup}>
-              <label>Fecha de nacimiento</label>
+              <label htmlFor="reg-fecha">Fecha de nacimiento</label>
               <input
+                id="reg-fecha"
                 type="date"
                 name="fechaNacimiento"
                 value={formData.fechaNacimiento}
                 onChange={handleChange}
+                autoComplete="bday"
+                required
               />
             </div>
             <div className={styles.inputGroup}>
-              <label>RFC</label>
+              <label htmlFor="reg-rfc">RFC</label>
               <input
+                id="reg-rfc"
                 type="text"
                 name="rfc"
                 value={formData.rfc}
                 onChange={handleChange}
                 placeholder="Ej. PEJJ800101XXX"
+                autoComplete="off"
               />
             </div>
 
             <div className={styles.inputGroup}>
-              <label>Estado</label>
+              <label htmlFor="reg-estado">Estado</label>
               <select
+                id="reg-estado"
                 name="estado"
                 value={formData.estado}
                 onChange={handleChange}
                 className={styles.fullWidthSelect}
+                autoComplete="address-level1"
               >
                 {LOCATIONS.map((loc) => (
                   <option key={loc.estado} value={loc.estado}>
@@ -221,12 +258,14 @@ export default function Register() {
               </select>
             </div>
             <div className={styles.inputGroup}>
-              <label>Ciudad</label>
+              <label htmlFor="reg-ciudad">Ciudad</label>
               <select
+                id="reg-ciudad"
                 name="ciudad"
                 value={formData.ciudad}
                 onChange={handleChange}
                 className={styles.fullWidthSelect}
+                autoComplete="address-level2"
               >
                 {availableCities.map((ciudad) => (
                   <option key={ciudad} value={ciudad}>
@@ -237,60 +276,55 @@ export default function Register() {
             </div>
           </div>
 
+          {/* COLUMNA DERECHA: SEGURIDAD */}
           <div className={styles.column}>
             <div className={styles.inputGroup}>
-              <label>Contraseña</label>
+              <label htmlFor="reg-password">Contraseña</label>
               <div className={styles.passwordWrapper}>
                 <input
+                  id="reg-password"
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="****************"
                   value={formData.password}
                   onChange={handleChange}
                   className={styles.inputWithIcon}
+                  autoComplete="new-password"
+                  required
                 />
-                <button
-                  type="button"
-                  className={styles.eyeButton}
+                <EyeIcon
+                  visible={showPassword}
                   onClick={() => setShowPassword(!showPassword)}
-                >
-                  <Image
-                    src={showPassword ? "/icons/eye.svg" : "/icons/eye-off.svg"}
-                    alt="Toggle password"
-                    width={20}
-                    height={20}
-                  />
-                </button>
+                  label={
+                    showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                  }
+                />
               </div>
             </div>
 
             <div className={styles.inputGroup}>
-              <label>Confirmar contraseña</label>
+              <label htmlFor="reg-confirm">Confirmar contraseña</label>
               <div className={styles.passwordWrapper}>
                 <input
+                  id="reg-confirm"
                   type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
                   placeholder="****************"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className={styles.inputWithIcon}
+                  autoComplete="new-password"
+                  required
                 />
-                <button
-                  type="button"
-                  className={styles.eyeButton}
+                <EyeIcon
+                  visible={showConfirmPassword}
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  <Image
-                    src={
-                      showConfirmPassword
-                        ? "/icons/eye.svg"
-                        : "/icons/eye-off.svg"
-                    }
-                    alt="Toggle confirm password"
-                    width={20}
-                    height={20}
-                  />
-                </button>
+                  label={
+                    showConfirmPassword
+                      ? "Ocultar contraseña"
+                      : "Mostrar contraseña"
+                  }
+                />
               </div>
             </div>
 
@@ -311,32 +345,38 @@ export default function Register() {
 
         <div className={styles.actions}>
           <button type="submit" className={styles.submitButton}>
-            Crear cuenta
+            Continuar
           </button>
           <Link href="/auth/login" className={styles.link}>
             ¿Ya tienes una cuenta? Iniciar sesión
           </Link>
         </div>
       </form>
-    </div>
+    </main>
   );
 
   const renderStepTwo = () => (
-    <div className={styles.preferencesContainer}>
+    <main className={styles.preferencesContainer}>
       <h1 className={styles.prefTitle}>¡Un último paso!</h1>
       <p className={styles.prefSubtitle}>
         Establece tus preferencias para recibir recomendaciones personalizadas
       </p>
 
-      <div className={styles.alertContainer} style={{ maxWidth: "500px" }}>
-        <Alert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert({ type: "", message: "" })}
-        />
+      <div
+        className={styles.alertContainer}
+        style={{ maxWidth: "500px" }}
+        aria-live="polite"
+      >
+        {alert.message && (
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert({ type: "", message: "" })}
+          />
+        )}
       </div>
 
-      <div className={styles.prefContent}>
+      <form className={styles.prefContent} onSubmit={handleFinalSubmit}>
         <div className={styles.sliderSection}>
           <div className={styles.labelRow}>
             <span className={styles.labelTitle}>Presupuesto</span>
@@ -353,8 +393,11 @@ export default function Register() {
               className={styles.cleanInput}
               value={formData.presupuestoMin}
               onChange={handleChange}
+              aria-label="Presupuesto mínimo"
             />
-            <span className={styles.dash}>-</span>
+            <span className={styles.dash} aria-hidden="true">
+              -
+            </span>
             <input
               type="number"
               name="presupuestoMax"
@@ -362,14 +405,18 @@ export default function Register() {
               className={styles.cleanInput}
               value={formData.presupuestoMax}
               onChange={handleChange}
+              aria-label="Presupuesto máximo"
             />
           </div>
           <p className={styles.helperText}>Rango de precios estimado</p>
         </div>
 
         <div className={styles.inputGroup}>
-          <label className={styles.labelTitle}>Categoría</label>
+          <label htmlFor="pref-categoria" className={styles.labelTitle}>
+            Categoría
+          </label>
           <select
+            id="pref-categoria"
             name="idCategoria"
             className={styles.cleanSelect}
             value={formData.idCategoria}
@@ -385,13 +432,14 @@ export default function Register() {
 
         <div className={styles.prefActions}>
           <button
-            onClick={handleFinalSubmit}
+            type="submit"
             className={styles.blackButton}
             disabled={loading}
           >
-            {loading ? "Finalizando..." : "Aceptar preferencias"}
+            {loading ? "Creando cuenta..." : "Aceptar y crear cuenta"}
           </button>
           <button
+            type="button"
             onClick={() => setStep(1)}
             className={styles.backButton}
             disabled={loading}
@@ -399,8 +447,8 @@ export default function Register() {
             Regresar
           </button>
         </div>
-      </div>
-    </div>
+      </form>
+    </main>
   );
 
   return step === 1 ? renderStepOne() : renderStepTwo();

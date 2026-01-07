@@ -4,21 +4,19 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import AuthService from "@services/AuthService";
 import Alert from "@components/alert/Alert";
-import ReturnButton from "@components/returnButton/ReturnButton"; // <--- IMPORTAR
+import ReturnButton from "@components/returnButton/ReturnButton";
 import styles from "./recovery.module.css";
 
 export default function PasswordRecovery() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ type: "", message: "" });
-
-  // Estados del formulario
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
   const handleReturn = () => {
-    router.back(); // Función para regresar
+    router.back();
   };
 
   const handleRequestCode = async (e) => {
@@ -83,8 +81,7 @@ export default function PasswordRecovery() {
   };
 
   return (
-    <div className={styles.container}>
-      {/* HEADER MODIFICADO CON RETURN BUTTON */}
+    <main className={styles.container}>
       <div className={styles.header}>
         <div className={styles.backBtnWrapper}>
           <ReturnButton onClick={handleReturn} />
@@ -92,7 +89,7 @@ export default function PasswordRecovery() {
         <h1 className={styles.title}>Recuperar contraseña</h1>
       </div>
 
-      <div className={styles.alertContainer}>
+      <div className={styles.alertContainer} aria-live="polite">
         {alert.message && (
           <Alert
             type={alert.type}
@@ -103,20 +100,21 @@ export default function PasswordRecovery() {
       </div>
 
       <div className={styles.content}>
-        {/* SECCIÓN 1: SOLICITAR CÓDIGO */}
-        <div className={styles.section}>
-          <p className={styles.instruction}>
+        <section className={styles.section} aria-labelledby="instruction-1">
+          <p id="instruction-1" className={styles.instruction}>
             1. Ingresa tu correo para recibir un código de restablecimiento.
           </p>
           <form onSubmit={handleRequestCode} className={styles.requestRow}>
             <input
               type="email"
+              id="email"
               placeholder="johndoe@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={styles.input}
               disabled={loading}
               autoComplete="email"
+              aria-label="Correo electrónico para recuperación"
             />
             <button
               type="submit"
@@ -126,33 +124,54 @@ export default function PasswordRecovery() {
               {loading ? "..." : "Enviar código"}
             </button>
           </form>
-        </div>
+        </section>
 
-        <hr className={styles.divider} />
+        <hr className={styles.divider} aria-hidden="true" />
 
-        {/* SECCIÓN 2: RESTABLECER */}
-        <div className={styles.section}>
-          <p className={styles.instruction}>
+        <section className={styles.section} aria-labelledby="instruction-2">
+          <p id="instruction-2" className={styles.instruction}>
             2. Ingresa el código enviado a tu correo y tu nueva contraseña.
           </p>
 
           <div className={styles.resetGrid}>
             <form onSubmit={handleResetPassword} className={styles.formColumn}>
               <div className={styles.inputGroup}>
+                <label
+                  htmlFor="token-input"
+                  style={{
+                    marginBottom: "5px",
+                    display: "block",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  Código de verificación
+                </label>
                 <input
                   type="text"
-                  placeholder="Código de verificación"
+                  id="token-input"
+                  placeholder="Ej. 123456"
                   value={token}
                   onChange={(e) => setToken(e.target.value)}
                   className={styles.input}
                   disabled={loading}
-                  autoComplete="off"
+                  autoComplete="one-time-code"
                 />
               </div>
               <div className={styles.inputGroup}>
+                <label
+                  htmlFor="new-password"
+                  style={{
+                    marginBottom: "5px",
+                    display: "block",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  Nueva contraseña
+                </label>
                 <input
                   type="password"
-                  placeholder="Nueva contraseña"
+                  id="new-password"
+                  placeholder="********"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className={styles.input}
@@ -183,8 +202,8 @@ export default function PasswordRecovery() {
               </ul>
             </div>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

@@ -6,12 +6,12 @@ import Link from "next/link";
 import Image from "next/image";
 import AuthService from "@services/AuthService";
 import Alert from "@components/alert/Alert";
+import logoImage from "@images/logo.svg";
 import styles from "./login.module.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
 
   const [alert, setAlert] = useState({ type: "", message: "" });
@@ -44,19 +44,25 @@ export default function Login() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>
-        Inmuebles
-        <br />a tu alcance
-      </h1>
+    <main className={styles.container}>
+      <div className={styles.logoContainer}>
+        <Image
+          src={logoImage}
+          alt="Logo Inmuebles a tu alcance"
+          width={120}
+          height={120}
+          priority
+        />
+      </div>
+
+      <h1 className={styles.title}>Bienvenido de nuevo</h1>
+
       <p className={styles.subtitle}>
-        Ingresa tu correo y contraseña
-        <br />
-        para iniciar sesión
+        Ingresa tus credenciales para acceder <br /> a tu cuenta.
       </p>
 
       <form onSubmit={handleSubmit} className={styles.form}>
-        <div style={{ marginBottom: "20px", minHeight: "20px" }}>
+        <div className={styles.alertContainer}>
           <Alert
             type={alert.type}
             message={alert.message}
@@ -69,11 +75,13 @@ export default function Login() {
           <input
             id="email"
             type="email"
-            placeholder="johndoe@gmail.com"
+            placeholder="ejemplo@correo.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             disabled={loading}
+            autoComplete="email"
+            className={styles.input}
           />
         </div>
 
@@ -83,21 +91,26 @@ export default function Login() {
             <input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="********"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
+              autoComplete="current-password"
               className={styles.inputWithIcon}
             />
             <button
               type="button"
               className={styles.eyeButton}
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={
+                showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+              }
             >
               <Image
                 src={showPassword ? "/icons/eye.svg" : "/icons/eye-off.svg"}
-                alt="Mostrar contraseña"
+                alt=""
+                aria-hidden="true"
                 width={20}
                 height={20}
               />
@@ -111,17 +124,15 @@ export default function Login() {
 
         <div className={styles.links}>
           <Link href="/auth/register" className={styles.link}>
-            ¿No tienes una cuenta?
-            <br />
-            Crear cuenta nueva
+            ¿No tienes cuenta? <br />
+            <strong>Regístrate aquí</strong>
           </Link>
           <Link href="/auth/recovery" className={styles.link}>
-            ¿No recuerdas tu contraseña?
-            <br />
-            Recuperar contraseña
+            ¿Olvidaste tu contraseña? <br />
+            <strong>Recuperar</strong>
           </Link>
         </div>
       </form>
-    </div>
+    </main>
   );
 }

@@ -1,0 +1,30 @@
+<svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="150" cy="45" r="50" fill="#3b82f6" opacity="0.15" filter="blur(10px)"/>
+  
+  <circle cx="150" cy="45" r="48" fill="#ffffff" opacity="0.1"/>
+
+  <g transform="translate(150, 45)">
+    <path d="M -45 -5 L 0 -35 L 45 -5 Z" fill="#3b82f6" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+    
+    <rect x="-38" y="-5" width="76" height="50" fill="#ffffff" stroke="#ffffff" stroke-width="2" rx="3"/>
+    
+    <rect x="-10" y="15" width="20" height="30" fill="#1e293b" rx="2"/>
+    <circle cx="5" cy="30" r="2" fill="#fbbf24"/>
+    
+    <rect x="-28" y="8" width="14" height="14" fill="#60a5fa" stroke="#1e293b" stroke-width="1"/>
+    <rect x="14" y="8" width="14" height="14" fill="#60a5fa" stroke="#1e293b" stroke-width="1"/>
+    
+    <rect x="-42" y="45" width="84" height="4" fill="#3b82f6" rx="2"/>
+  </g>
+  
+  <text x="150" y="88" font-family="system-ui, sans-serif" font-size="28" font-weight="800" text-anchor="middle" fill="#ffffff" letter-spacing="1">
+    INMUEBLES
+  </text>
+  
+  <text x="150" y="108" font-family="system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#60a5fa" letter-spacing="3">
+    A TU ALCANCE
+  </text>
+  
+  <circle cx="55" cy="45" r="3" fill="#60a5fa" opacity="0.6"/>
+  <circle cx="245" cy="45" r="3" fill="#60a5fa" opacity="0.6"/>
+</svg>

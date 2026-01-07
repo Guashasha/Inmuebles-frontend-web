@@ -1,30 +1,78 @@
-.card {
-    cursor: pointer;
-    background: linear-gradient(to bottom, white, aliceblue);
-    border-radius: 8;
-    border: 1px solid rgb(218, 238, 255);
-    padding: 0;
+.po-card {
+  cursor: pointer;
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.card p {
-    padding: 0 2vw 0 2vw;
+.po-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-.card img {
-    width: 100%;
-    margin-bottom: 0.5vh;
+.po-imageContainer {
+  width: 100%;
+  height: 200px;
+  background-color: #f3f4f6;
+  position: relative;
 }
 
-.tag {
-    margin: 0.8vh 0;
+.po-propertyImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.cityTag {
-    font-size: 85%;
-    margin: 0.8vh 0 2vh 0;
+.po-cardContent {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
-.actionTag {
-    font-size: 85%;
-    margin: 0.8vh 0 1.5vh 0;
+.po-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.po-city {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.po-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000;
+  margin: 4px 0 0 0;
+}
+
+.po-footer {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.po-actionTag {
+  font-size: 0.75rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  padding: 4px 10px;
+  border-radius: 12px;
+  width: fit-content;
+  margin: 0;
+  font-weight: 600;
 }

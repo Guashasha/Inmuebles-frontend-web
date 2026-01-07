@@ -1,0 +1,438 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  padding-top: 100px;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stepper {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 40px;
+  overflow-x: auto;
+}
+
+.stepItem {
+  padding: 10px 20px;
+  color: #666;
+  font-weight: 500;
+  cursor: default;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.activeStep {
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+.completedStep {
+  color: #000;
+  opacity: 0.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroupFull {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input,
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  background-color: white;
+  font-family: inherit;
+  min-height: 48px;
+  transition: border-color 0.2s;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #000;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+select.input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  cursor: pointer;
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.btnPrimary {
+  background-color: #222;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btnPrimary:hover {
+  background-color: #000;
+}
+
+.btnPrimary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btnSecondary {
+  background-color: white;
+  color: #222;
+  border: 1px solid #ccc;
+  padding: 12px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btnSecondary:hover {
+  background-color: #f9f9f9;
+  border-color: #000;
+}
+
+.btnSecondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.leftColumnForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mapContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px;
+}
+
+.mapPlaceholder {
+  flex: 1;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  border: 2px dashed #e5e7eb;
+}
+
+.sectionBlock {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #000;
+}
+
+.checkboxGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+  min-width: 140px;
+  user-select: none;
+}
+
+.checkboxInput {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #000;
+}
+
+.rowInputs {
+  display: flex;
+  gap: 20px;
+}
+
+.readOnlyInput {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+.helperText {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.depositSection {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 48px;
+}
+
+.radioInput {
+  width: 18px;
+  height: 18px;
+  accent-color: #000;
+  cursor: pointer;
+}
+
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 20px;
+}
+
+.uploadBox {
+  width: 100%;
+  max-width: 300px;
+  height: 250px;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background-color: #fafafa;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.uploadBox:hover {
+  border-color: #000;
+  background-color: #f0f0f0;
+}
+
+.uploadButton {
+  background-color: #333;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.fileList {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: left;
+  width: 100%;
+  max-width: 300px;
+}
+
+.fileList p {
+  margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inputGroupFull {
+    grid-column: span 1;
+  }
+
+  .stepper {
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+  }
+
+  .mapContainer {
+    min-height: 250px;
+    margin-top: 20px;
+  }
+
+  .checkboxGrid {
+    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+
+  .checkboxLabel {
+    min-width: auto;
+  }
+
+  .rowInputs {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .depositSection {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+}
+
+.inputError {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ... (MANTÉN TODO TU CSS ANTERIOR AQUÍ ARRIBA) ... */
+
+/* --- Estilos para la sección de Previsualización de Imágenes --- */
+
+/* Grid contenedor de las miniaturas */
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+  width: 100%;
+}
+
+/* Contenedor individual de cada imagen */
+.previewItem {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3; /* Reemplaza el style={{ aspectRatio: "4/3" }} */
+}
+
+/* La imagen de previsualización */
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón flotante para eliminar */
+.removeButton {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ef4444;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease;
+  padding: 0; /* Reset de padding */
+}
+
+.removeButton:hover {
+  transform: scale(1.1);
+  background-color: #dc2626;
+}
+
+.depositInputContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.smallInput {
+  max-width: 150px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.alertContainer {
+  margin-bottom: 20px;
+}
+
+.counterText {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: inherit;
+}
+
+.counterTextFull {
+  color: #eab308;
+}
